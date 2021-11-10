@@ -1,0 +1,221 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 300;
+    src: url("../assets/fonts/Roboto-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../assets/fonts/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    src: url("../assets/fonts/Roboto-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    src: url("../assets/fonts/RobotoMono-VariableFont_wght.ttf") format("truetype");
+}
+
+* {
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    background-color: #000000;
+}
+
+a {
+    color: #18BCBC;
+    text-decoration: none;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    min-width: 68.5vw;
+    max-width: 68.5vw;
+    margin: 0 auto;
+    margin-top: 5em;
+}
+
+.content-home {
+    display: flex;
+    flex-direction: row;
+    max-width: 68.5vw;
+    margin: 0 20vw;
+    padding-top: 7vw;
+    min-height: 20em;
+    overflow: visible;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    max-width: 68.5vw;
+    margin: 0 auto;
+    overflow: visible;
+}
+
+.projects {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 50px;
+}
+
+.subtitle {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 50px;
+    margin: 0 auto;
+    margin-top: 0.75em;
+    margin-bottom: 0.5em;
+}
+
+.bl-wrapper {
+    flex: 0 0 15vw;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bl {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 64px;
+    text-shadow: 15px -15px 60px rgba(255, 255, 255, 0.385);
+}
+
+.rotated {
+    position: absolute;
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+.logo {
+    margin-right: 65px;
+}
+
+.logo-r {
+    margin-left: 5px;
+}
+
+.socials {
+    display: flex;
+    align-self: center;
+}
+
+.right {
+    margin-left: auto;
+}
+
+.social-icon {
+    width: 25px;
+    margin-right: 35px;
+}
+
+.languages {
+    display: flex;
+    align-self: center;
+    margin-top: 1em;
+}
+
+.language {
+    margin-right: 60px;
+    font-family: "Roboto Mono", monospace;
+    font-weight: 300;
+    font-size: 38px;
+    text-shadow: 14px 21px 37px rgba(0, 255, 0, 0.679);
+}
+
+.mlink {
+    flex-grow: 0;
+    margin: 0 20px;
+    max-height: 1em;
+}
+
+.card {
+    max-width: 20vw;
+    margin: 0 2em;
+    background: #000000;
+    border: 1px solid rgba(0, 255, 0, 0.47);
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.card-img {
+    border: 1px solid rgba(0, 255, 0, 0.47);
+    box-sizing: border-box;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1em;
+}
+
+.card-title {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 38px;
+    margin-bottom: 0;
+    color: #0f0;
+}
+
+.card-info {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    color: #0f0;
+}
+
+.card-link {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 15px;
+    color: #1DF3CD;
+}
+
+.card-link-wrapper {
+    margin: 10px 0;
+}
+
+.orange {
+    color: #E58D3C;
+}
+
+.cyan {
+    color: #18BCBC;
+    text-shadow: 10px 5px 60px rgba(255, 255, 255, 0.62);
+}
