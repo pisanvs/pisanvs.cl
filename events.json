@@ -3,12 +3,12 @@
         "venue": "Venue TEST",
         "date": "15/12/21",
         "time": "10:30",
-        "link": "example2.com"
+        "link": "example.com"
     },
     {
         "venue":"Venue TEST2",
         "date": "12/12/21",
         "time": "10:30",
-        "link": "exampletest.com"
+        "link": "example.com"
     }
 ]

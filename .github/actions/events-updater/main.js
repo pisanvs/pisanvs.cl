@@ -33,17 +33,17 @@ readFile('./events.json', (e, d) => {
             }
 
             let ev = `<div class="event">
-            <div class="event-content-wrapper">
-                <span class="event-text">${e.venue}</span><span class="ev-filler"></span>
-                <span class="event-text">${e.date} ${e.time} CLT</span>
+                <div class="event-content-wrapper">
+                    <span class="event-text">${e.venue}</span><span class="ev-filler"></span>
+                    <span class="event-text">${e.date} ${e.time} CLT</span>
+                </div>
+                <hr class="event-div">
             </div>
-            <hr class="event-div">
-        </div>
         `
 
             let final;
             let fsplit = d.toString().split("<!--EVENTS START-->")
-            final = fsplit[0] + ev + fsplit[1];
+            final = fsplit[0] + "<!--EVENTS START-->" + ev + fsplit[1];
             writeFile('./music.html', final, (eee) => {
                 if (eee) {
                     console.error(eee);
