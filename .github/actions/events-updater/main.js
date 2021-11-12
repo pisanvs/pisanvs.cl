@@ -1,4 +1,4 @@
-import { readFileSync, writeFile, writeFileSync } from 'fs';
+import { readFileSync, readFile, writeFile, writeFileSync } from 'fs';
 
 readFile('./music.html', (e, d) => {
     if (e) {
