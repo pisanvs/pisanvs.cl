@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Update events in music page
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         name: Checkout
       - name: Event Updater
         run: "node ./.github/actions/events-updater"
       - name: switch git url to ssh
-        run: git remote add origin ${{ secrets.ssh }}
+        run: git remote add origin git@github.com:pisanvs/pisanvs.cl.git
       - name: check for changes
         run: git status
       - name: add changed files
