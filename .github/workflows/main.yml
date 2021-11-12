@@ -13,7 +13,7 @@ jobs:
       - name: Event Updater
         run: "node ./.github/actions/events-updater"
       - name: switch git url to ssh
-        run: git remote set-url origin ${{ secrets.ssh }}
+        run: git remote add origin ${{ secrets.ssh }}
       - name: check for changes
         run: git status
       - name: add changed files
