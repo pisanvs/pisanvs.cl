@@ -140,13 +140,13 @@ a {
     margin-right: 35px;
 }
 
-.languages {
+.toplist {
     display: flex;
     align-self: center;
     margin-top: 1em;
 }
 
-.language {
+.tl-item {
     margin-right: 60px;
     font-family: "Roboto Mono", monospace;
     font-weight: 300;
@@ -213,6 +213,86 @@ a {
 
 .orange {
     color: #E58D3C;
+}
+
+
+.bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2em;
+}
+
+.btl-titles {
+    display: flex;
+    flex-direction: row;
+    font-family: "Roboto", sans-serif;
+    align-items: center;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 50px;
+}
+
+.btl-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    border: #00ff0025 solid 1px;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 5px;
+    margin-bottom: 0;
+}
+
+.ev-filler {
+    width: 6vw;
+    display: inline-block;
+}
+
+.event-div {
+    color: #00ff0025;
+    width: 98%;
+}
+
+.event-text {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 32px;
+}
+
+.event-content-wrapper {
+    margin: 0 10px;
+}
+
+.ws {
+    display: inline-block;
+    width: 0.5vw;
+}
+
+.ev-twitch {
+    width: 25px;
+}
+
+.ttv-link {
+    color: #fff;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
 }
 
 .cyan {

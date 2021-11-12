@@ -1,0 +1,28 @@
+on:
+  push:
+    branches: ["main"]
+    paths: "events.json"
+
+jobs:
+  event-update:
+    runs-on: ubuntu-latest
+    name: Update events in music page
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout
+      - name: Event Updater
+        run: "node ./.github/actions/events-updater/events-updater.js"
+      - name: switch git url to ssh
+        run: git remote set-url origin ${{ secrets.ssh }}
+      - name: check for changes
+        run: git status
+      - name: add changed files
+        run: git add --all
+      - name: change git name
+        run: git config --global user.name "events_updater_action"
+      - name: commit changes
+        run: "git commit -am \"[EVENTS-UPDATER]: Updated music.html\""
+      - name: fetch
+        run: git fetch origin main
+      - name: push
+        run: git push origin main
