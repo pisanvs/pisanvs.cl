@@ -8,7 +8,13 @@ readFile('./music.html', (e, d) => {
     let ssplit = d.toString().split("<!--EVENTS START-->");
     let esplit = ssplit[1].split("<!--EVENTS END-->");
     let final = ssplit[0] + "<!--EVENTS START-->\n\n<!--EVENTS END-->" + esplit[1];
-    writeFile('./music.html', final);
+    writeFile('./music.html', final, (e) => {
+        if (e) {
+            console.error(e);
+            return;
+        }
+        console.log("Updated events");
+    });
 });
 
 
