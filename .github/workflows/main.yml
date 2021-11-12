@@ -12,17 +12,12 @@ jobs:
         name: Checkout
       - name: Event Updater
         run: "node ./.github/actions/events-updater"
-      - name: switch git url to ssh
-        run: git remote set-url origin git@github.com:pisanvs/pisanvs.cl.git
-      - name: check for changes
-        run: git status
-      - name: add changed files
-        run: git add --all
-      - name: change git name
-        run: git config --global user.name "events_updater_action"
-      - name: commit changes
-        run: "git commit -am \"[EVENTS-UPDATER]: Updated music.html\""
-      - name: fetch
-        run: git fetch origin main
-      - name: push
-        run: git push origin main
+      - name: commit files
+        run: |
+          git config --local user.name "events-updater[bot]"
+          git commit -am "Update music.html"
+      - name: push changes
+        uses: ad-m/github-push-action@master
+        with: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+
