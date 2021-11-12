@@ -18,6 +18,7 @@ jobs:
           git commit -am "Update music.html"
       - name: push changes
         uses: ad-m/github-push-action@master
-        with: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
 
