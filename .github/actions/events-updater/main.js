@@ -1,6 +1,10 @@
 import { readFile, writeFile } from 'fs';
 
 readFile('./music.html', (e, d) => {
+    if (e) {
+        console.error(e);
+        return;
+    }
     let ssplit = d.toString().split("<!--EVENTS START-->");
     let esplit = ssplit[1].split("<!--EVENTS END-->");
     final = ssplit[0] + "<!--EVENTS START-->\n\n<!--EVENTS END-->" + esplit[1];
@@ -13,13 +17,12 @@ readFile('./events.json', (e, d) => {
         console.error(e);
         return;
     }
-    delete e;
     const events = JSON.parse(d);
     events.forEach(e => {
         console.log(`Updating ${e.name}`);
         readFile('./music.html', (ee, d) => {
             if (ee) {
-                console.error(e);
+                console.error(ee);
                 return;
             }
 
