@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs';
+import { readFile, writeFile, writeFileSync } from 'fs';
 
 readFile('./music.html', (e, d) => {
     if (e) {
@@ -44,13 +44,7 @@ readFile('./events.json', (e, d) => {
             let final;
             let fsplit = d.toString().split("<!--EVENTS START-->")
             final = fsplit[0] + "<!--EVENTS START-->" + ev + fsplit[1];
-            writeFile('./music.html', final, (eee) => {
-                if (eee) {
-                    console.error(eee);
-                    return;
-                }
-                console.log("Updated event");
-            });
+            writeFileSync('./music.html', final);
         });
     });
 })
