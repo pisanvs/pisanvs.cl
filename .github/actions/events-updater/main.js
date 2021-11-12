@@ -7,7 +7,7 @@ readFile('./music.html', (e, d) => {
     }
     let ssplit = d.toString().split("<!--EVENTS START-->");
     let esplit = ssplit[1].split("<!--EVENTS END-->");
-    final = ssplit[0] + "<!--EVENTS START-->\n\n<!--EVENTS END-->" + esplit[1];
+    let final = ssplit[0] + "<!--EVENTS START-->\n\n<!--EVENTS END-->" + esplit[1];
     writeFile('./music.html', final);
 });
 
