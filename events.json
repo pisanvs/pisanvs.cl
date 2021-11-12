@@ -1,12 +1,12 @@
 [
     {
-        "venue": "Venue ABC",
+        "venue": "Venue TEST",
         "date": "15/12/21",
         "time": "10:30",
         "link": "example.com"
     },
     {
-        "venue":"Venue XYZ",
+        "venue":"Venue TEST2",
         "date": "12/12/21",
         "time": "10:30",
         "link": "example.com"
