@@ -1,4 +1,4 @@
-import { readFile, writeFile, writeFileSync } from 'fs';
+import { readFileSync, writeFile, writeFileSync } from 'fs';
 
 readFile('./music.html', (e, d) => {
     if (e) {
@@ -23,21 +23,15 @@ readFile('./events.json', (e, d) => {
         console.error(e);
         return;
     }
-    const events = JSON.parse(d);
-    events.forEach(e => {
+    let evs;
+    JSON.parse(d).forEach(e => {
         console.log(`Updating ${e.venue}`);
-        readFile('./music.html', (ee, d) => {
-            if (ee) {
-                console.error(ee);
-                return;
-            }
-
-            let ev = `<div class="event"><div class="event-content-wrapper"><span class="event-text">${e.venue}</span><span class="ev-filler"></span><span class="event-text">${e.date} ${e.time} CLT</span></div><hr class="event-div"></div>`
-
-            let final;
-            let fsplit = d.toString().split("<!--EVENTS START-->")
-            final = fsplit[0] + "<!--EVENTS START-->" + ev + fsplit[1];
-            writeFileSync('./music.html', final);
-        });
+        d = readFileSync('./music.html', 'utf-8')
+        let ev = `\n<div class="event"><div class="event-content-wrapper"><span class="event-text">${e.venue}</span><span class="ev-filler"></span><span class="event-text">${e.date} ${e.time} CLT</span></div><hr class="event-div"></div>`
+        evs += ev;
     });
+    let final;
+    let fsplit = d.toString().split("<!--EVENTS START-->")
+    final = `${fsplit[0]}<!--EVENTS START-->${evs}\n${fsplit[1]}`;
+    writeFileSync('./music.html', final);
 })
