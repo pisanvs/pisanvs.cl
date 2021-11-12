@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v1
         name: Checkout
       - name: Event Updater
-        run: "node ./.github/actions/events-updater/events-updater.js"
+        run: "node ./.github/actions/events-updater"
       - name: switch git url to ssh
         run: git remote set-url origin ${{ secrets.ssh }}
       - name: check for changes
