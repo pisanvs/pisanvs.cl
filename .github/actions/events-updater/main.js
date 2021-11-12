@@ -25,21 +25,14 @@ readFile('./events.json', (e, d) => {
     }
     const events = JSON.parse(d);
     events.forEach(e => {
-        console.log(`Updating ${e.name}`);
+        console.log(`Updating ${e.venue}`);
         readFile('./music.html', (ee, d) => {
             if (ee) {
                 console.error(ee);
                 return;
             }
 
-            let ev = `<div class="event">
-                <div class="event-content-wrapper">
-                    <span class="event-text">${e.venue}</span><span class="ev-filler"></span>
-                    <span class="event-text">${e.date} ${e.time} CLT</span>
-                </div>
-                <hr class="event-div">
-            </div>
-        `
+            let ev = `<div class="event"><div class="event-content-wrapper"><span class="event-text">${e.venue}</span><span class="ev-filler"></span><span class="event-text">${e.date} ${e.time} CLT</span></div><hr class="event-div"></div>`
 
             let final;
             let fsplit = d.toString().split("<!--EVENTS START-->")
