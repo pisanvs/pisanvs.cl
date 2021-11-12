@@ -44,7 +44,13 @@ readFile('./events.json', (e, d) => {
             let final;
             let fsplit = d.toString().split("<!--EVENTS START-->")
             final = fsplit[0] + ev + fsplit[1];
-            writeFile('./music.html', final);
+            writeFile('./music.html', final, (eee) => {
+                if (eee) {
+                    console.error(eee);
+                    return;
+                }
+                console.log("Updated event");
+            });
         });
     });
 })
