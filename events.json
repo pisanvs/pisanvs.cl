@@ -1,14 +1,8 @@
 [
     {
-        "venue": "Venue ABC",
-        "date": "15/12/21",
-        "time": "10:30",
-        "link": "example2.com"
-    },
-    {
-        "venue":"Venue XYZ 123",
-        "date": "12/12/21",
-        "time": "10:30",
-        "link": "example1.com"
+        "venue": "Coming soon...",
+        "date": "00/00/00",
+        "time": "00:00",
+        "link": "pisanvs.cl"
     }
 ]
