@@ -1,5 +1,4 @@
 {
     "name": "events-updater",
-    "type": "module",
     "main": "main.js"
 }

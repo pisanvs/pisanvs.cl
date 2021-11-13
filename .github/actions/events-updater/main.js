@@ -1,37 +1,26 @@
-import { readFileSync, readFile, writeFile, writeFileSync } from 'fs';
+const fs = require('fs').promises;
+const { readFile, readFileSync, writeFileSync } = require('fs')
 
-readFile('./music.html', (e, d) => {
-    if (e) {
-        console.error(e);
-        return;
-    }
-    let ssplit = d.toString().split("<!--EVENTS START-->");
-    let esplit = ssplit[1].split("<!--EVENTS END-->");
-    let final = ssplit[0] + "<!--EVENTS START-->\n\n<!--EVENTS END-->" + esplit[1];
-    writeFile('./music.html', final, (e) => {
-        if (e) {
-            console.error(e);
-            return;
-        }
-        console.log("Updated events");
+fs.readFile('music.html', 'utf-8').then(async (f) => {
+    f = `${f.split('<!--EVENTS START-->')[0]}<!--EVENTS START-->\n\t\t\t\t\t\t<!--EVENTS END-->${f.split('<!--EVENTS END-->')[1]}`
+    console.log(f);
+    await fs.writeFile('./music.html', f).then(() => {
+        readFile('./events.json', (e, d) => {
+            if (e) {
+                console.error(e);
+                return;
+            }
+            let evs;
+            JSON.parse(d).forEach(ee => {
+                console.log(`Updating ${ee.venue}`);
+                let ev = `\n\t\t\t\t\t\t\t<div class="event"><div class="event-content-wrapper"><a class="event-text ev-link evl" href="//${ee.link}">${ee.venue}</a><span class="event-text evr">${ee.date} ${ee.time} CLT</span></div><hr class="event-div"></div>\n`;
+                evs ? evs += ev : evs = ev;
+            });
+            let dd = readFileSync('./music.html', 'utf-8');
+            let final;
+            let fsplit = dd.toString().split("<!--EVENTS START-->");
+            final = `${fsplit[0]}<!--EVENTS START-->\n${evs}${fsplit[1]}`;
+            writeFileSync('./music.html', final);
+        });
     });
-});
-
-
-readFile('./events.json', (e, d) => {
-    if (e) {
-        console.error(e);
-        return;
-    }
-    let evs;
-    JSON.parse(d).forEach(e => {
-        console.log(`Updating ${e.venue}`);
-        d = readFileSync('./music.html', 'utf-8')
-        let ev = `\n<div class="event"><div class="event-content-wrapper"><span class="event-text">${e.venue}</span><span class="ev-filler"></span><span class="event-text">${e.date} ${e.time} CLT</span></div><hr class="event-div"></div>`
-        evs += ev;
-    });
-    let final;
-    let fsplit = d.toString().split("<!--EVENTS START-->")
-    final = `${fsplit[0]}<!--EVENTS START-->${evs}\n${fsplit[1]}`;
-    writeFileSync('./music.html', final);
 })
