@@ -35,7 +35,6 @@ body {
 }
 
 a {
-    color: #18BCBC;
     text-decoration: none;
     padding: 0;
 }
@@ -43,8 +42,6 @@ a {
 .container {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 .header {
@@ -56,8 +53,6 @@ a {
 }
 
 .content-home {
-    display: flex;
-    flex-direction: row;
     max-width: 68.5vw;
     margin: 0 20vw;
     padding-top: 7vw;
@@ -65,9 +60,17 @@ a {
     overflow: visible;
 }
 
-.content {
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
     display: flex;
     flex-direction: column;
+}
+
+.content {
     max-width: 68.5vw;
     margin: 0 auto;
     overflow: visible;
@@ -80,15 +83,11 @@ a {
 }
 
 .title {
-    font-family: "Roboto";
-    font-style: normal;
     font-weight: 500;
     font-size: 50px;
 }
 
 .subtitle {
-    font-family: "Roboto";
-    font-style: normal;
     font-weight: 500;
     font-size: 50px;
     margin: 0 auto;
@@ -112,7 +111,7 @@ a {
     text-shadow: 15px -15px 60px rgba(255, 255, 255, 0.385);
 }
 
-.rotated {
+.rot {
     position: absolute;
     transform: rotate(90deg);
     transform-origin: center;
@@ -123,7 +122,7 @@ a {
 }
 
 .logo-r {
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
 .socials {
@@ -133,6 +132,19 @@ a {
 
 .right {
     margin-left: auto;
+    align-items: center;
+}
+
+.navlink {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 28px;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: #fff;
 }
 
 .social-icon {
@@ -160,6 +172,12 @@ a {
     max-height: 1em;
 }
 
+.mono {
+    font-family: "Roboto Mono";
+    font-style: normal;
+    font-weight: 300;
+}
+
 .card {
     max-width: 20vw;
     margin: 0 2em;
@@ -177,34 +195,25 @@ a {
 }
 
 .card-content {
-    display: flex;
-    flex-direction: column;
     padding: 0 1em;
 }
 
 .card-title {
-    font-family: "Roboto Mono";
-    font-style: normal;
-    font-weight: 300;
     font-size: 38px;
     margin-bottom: 0;
     color: #0f0;
 }
 
 .card-info {
-    font-family: "Roboto Mono";
-    font-style: normal;
-    font-weight: 300;
     font-size: 20px;
     color: #0f0;
 }
 
 .card-link {
-    font-family: "Roboto Mono";
-    font-style: normal;
-    font-weight: 300;
     font-size: 15px;
-    color: #1DF3CD;
+    color: #18BCBC;
+    text-decoration: none;
+    padding: 0;
 }
 
 .card-link-wrapper {
@@ -217,17 +226,12 @@ a {
 
 
 .bottom {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-top: 2em;
 }
 
 .btl-titles {
-    display: flex;
-    flex-direction: row;
-    font-family: "Roboto", sans-serif;
     align-items: center;
     font-style: normal;
     font-weight: 300;
@@ -235,8 +239,6 @@ a {
 }
 
 .btl-chart {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 1em;
@@ -244,8 +246,6 @@ a {
 }
 
 .event {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: -moz-available;
@@ -266,7 +266,6 @@ a {
 }
 
 .event-text {
-    font-family: "Roboto";
     font-style: normal;
     font-weight: 300;
     font-size: 32px;
@@ -291,8 +290,6 @@ a {
 .event-content-wrapper {
     width: 98%;
     margin: 0 10px;
-    display: flex;
-    flex-direction: row;
 }
 
 .ws {
@@ -304,6 +301,28 @@ a {
     width: 25px;
 }
 
+.mel {
+    max-width: 40%;
+}
+
+.me-section {
+    justify-content: space-between;
+    margin-top: 2em;
+}
+
+.me-title {
+    font-weight: 500;
+    font-size: 38px;
+    margin-bottom: 0;
+    color: #fff;
+}
+
+.me-text {
+    font-weight: 300;
+    font-size: 18px;
+    color: #fff;
+}
+
 .ttv-link {
     color: #fff;
     font-size: 25px;
@@ -312,8 +331,6 @@ a {
 }
 
 .left {
-    display: flex;
-    flex-direction: column;
     margin-right: auto;
 }
 
@@ -321,3 +338,7 @@ a {
     color: #18BCBC;
     text-shadow: 10px 5px 60px rgba(255, 255, 255, 0.62);
 }
+
+.hunder:hover {
+    text-decoration: underline;
+} 

@@ -13,7 +13,7 @@ fs.readFile('music.html', 'utf-8').then(async (f) => {
             let evs;
             JSON.parse(d).forEach(ee => {
                 console.log(`Updating ${ee.venue}`);
-                let ev = `\n\t\t\t\t\t\t\t<div class="event"><div class="event-content-wrapper"><a class="event-text ev-link evl" href="//${ee.link}">${ee.venue}</a><span class="event-text evr">${ee.date} ${ee.time} CLT</span></div><hr class="event-div"></div>\n`;
+                let ev = `\n\t\t\t\t\t\t\t<div class="event flex-col"><div class="event-content-wrapper flex-row"><a class="event-text ev-link evl" href="//${ee.link}">${ee.venue}</a><span class="event-text evr">${ee.date} ${ee.time} CLT</span></div><hr class="event-div"></div>\n`;
                 evs ? evs += ev : evs = ev;
             });
             let dd = readFileSync('./music.html', 'utf-8');
