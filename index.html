@@ -16,6 +16,13 @@
     <title>PISANVS</title>
 </head>
 <body>
+    <script type="text/javascript">
+        // guessing most mobile users dont block javascript
+        // check if the user is on mobile
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            window.location.href = "./mobile/index.html";
+        }
+    </script>
     <div class="container flex-col">
         <div class="header">
             <span class="title orange logo">PISANVS</span>

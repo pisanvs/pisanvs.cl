@@ -12,30 +12,25 @@
     <meta name="og:type" content="website">
     <meta name="og:url" content="pisanvs.cl">
     <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="../styles/index-mobile.css">
     <title>PISANVS</title>
 </head>
 <body>
-    <script type="text/javascript">
-        // guessing most mobile users dont block javascript
-        // check if the user is on mobile
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-            window.location.href = "./mobile/index.html";
-        }
-    </script>
-    <div class="container flex-col">
-        <div class="header">
-            <a href="/"><span class="title orange logo">PISANVS<span class="title cyan logo-r">ABOUT ME</span></span></a>
-            <span class="socials right flex-row">
-                <a href="//twitch.tv/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/twitch.svg" alt="twitch logo icon" class="social-icon"></a>
-                <a href="//www.youtube.com/channel/UCRhaFuN8REL5jWEZHz1r7uQ/" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/youtube.svg" alt="youtube logo icon" class="social-icon"></a>
-                <a href="//www.instagram.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/instagram.svg" alt="instagram logo icon" class="social-icon"></a>
-                <a href="//github.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/github.svg" alt="github logo icon" class="social-icon"></a>
+    <div class="container">
+        <div class="header flex-col">
+            <span class="title orange logo"><a class="orange" href="/mobile/">PISANVS <span class="cyan title">ME</a></span></span>
+            <span class="socials">
+                <a href="//twitch.tv/pisanvs" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/twitch.svg" alt="twitch logo icon" class="social-icon"></a>
+                <a href="//www.youtube.com/channel/UCRhaFuN8REL5jWEZHz1r7uQ/" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/youtube.svg" alt="youtube logo icon" class="social-icon"></a>
+                <a href="//www.instagram.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/instagram.svg" alt="instagram logo icon" class="social-icon"></a>
+                <a href="//github.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/github.svg" alt="github logo icon" class="social-icon"></a>
             </span>
         </div>
+
+
         <div class="content flex-col">
             <div class="bottom flex-row">
-                <div class="left flex-col mel">
+                <div class="flex-col">
                     <div class="me-section flex-col">
                         <span class="me-title">Bio</span>
                         <br>
@@ -56,6 +51,7 @@
                             <br>
 
                             If you want something to watch, here’s some youtube channels I recommend
+                            <br>
                             <br>
                             <a href="https://www.youtube.com/c/lukesmithxyz" class="cyan hunder">Luke Smith</a><br>
                             <a href="https://www.youtube.com/c/MentalOutlaw" class="cyan hunder">Mental Outlaw</a><br>

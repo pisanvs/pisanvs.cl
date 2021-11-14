@@ -7,7 +7,7 @@
     <meta name="keywords" content="pisanvs, DJ, music, drum and bass, Programming">
     <meta name="author" content="pisanvs, maxmorel@pisanvs.cl">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="og:title" content="pisanvs official website">
+    <meta name="og:title" content="pisanvs development">
     <meta name="og:description" content="Official website for pisanvs. DJ, Producer, Programmer and streamer">
     <meta name="og:type" content="website">
     <meta name="og:url" content="pisanvs.cl">
@@ -16,6 +16,13 @@
     <link rel="stylesheet" href="./styles/index.css">
 </head>
 <body>
+    <script type="text/javascript">
+        // guessing most mobile users dont block javascript
+        // check if the user is on mobile
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            window.location.href = "./mobile/index.html";
+        }
+    </script>
     <div class="container flex-col">
         <div class="header">
             <a href="/"><span class="title orange logo">PISANVS<span class="title cyan logo-r">DEV</span></span></a>
