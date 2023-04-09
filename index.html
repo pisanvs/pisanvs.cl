@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,23 +15,43 @@
     <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="./styles/index.css">
     <title>PISANVS</title>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WZQJQTH');</script>
+    <!-- End Google Tag Manager -->
 </head>
+
 <body>
     <script type="text/javascript">
         // guessing most mobile users dont block javascript
         // check if the user is on mobile
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             window.location.href = "./mobile/index.html";
         }
     </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZQJQTH" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div class="container flex-col">
         <div class="header">
             <span class="title orange logo">PISANVS</span>
             <span class="socials">
-                <a href="//twitch.tv/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/twitch.svg" alt="twitch logo icon" class="social-icon"></a>
-                <a href="//www.youtube.com/channel/UCRhaFuN8REL5jWEZHz1r7uQ/" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/youtube.svg" alt="youtube logo icon" class="social-icon"></a>
-                <a href="//www.instagram.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/instagram.svg" alt="instagram logo icon" class="social-icon"></a>
-                <a href="//github.com/pisanvs" target="_blank" rel="noopener noreferrer"><img src="./assets/icons/github.svg" alt="github logo icon" class="social-icon"></a>
+                <a href="//twitch.tv/pisanvs" target="_blank" rel="noopener noreferrer"><img
+                        src="./assets/icons/twitch.svg" alt="twitch logo icon" class="social-icon"></a>
+                <a href="//www.youtube.com/channel/UCRhaFuN8REL5jWEZHz1r7uQ/" target="_blank"
+                    rel="noopener noreferrer"><img src="./assets/icons/youtube.svg" alt="youtube logo icon"
+                        class="social-icon"></a>
+                <a href="//www.instagram.com/pisanvs" target="_blank" rel="noopener noreferrer"><img
+                        src="./assets/icons/instagram.svg" alt="instagram logo icon" class="social-icon"></a>
+                <a href="//github.com/pisanvs" target="_blank" rel="noopener noreferrer"><img
+                        src="./assets/icons/github.svg" alt="github logo icon" class="social-icon"></a>
             </span>
         </div>
         <div class="content-home flex-row">
@@ -49,4 +70,5 @@
         </div>
     </div>
 </body>
+
 </html>
