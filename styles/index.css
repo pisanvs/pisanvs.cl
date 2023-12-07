@@ -58,6 +58,7 @@ a {
     padding-top: 7vw;
     min-height: 20em;
     overflow: visible;
+    justify-content: center;
 }
 
 .flex-row {
@@ -307,13 +308,14 @@ a {
 
 .me-section {
     justify-content: space-between;
+    align-items: center;
     margin-top: 2em;
 }
 
 .me-title {
     font-weight: 500;
     font-size: 38px;
-    margin-bottom: 0;
+    margin-bottom: 15px;
     color: #fff;
 }
 
