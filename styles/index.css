@@ -215,6 +215,7 @@ a {
     color: #18BCBC;
     text-decoration: none;
     padding: 0;
+    word-wrap: break-word;
 }
 
 .card-link-wrapper {
