@@ -7,7 +7,7 @@
     <meta name="description" content="Official website for pisanvs. DJ, Producer, Programmer and streamer">
     <meta name="keywords" content="pisanvs, DJ, music, drum and bass, Programming">
     <meta name="author" content="pisanvs, maxmorel@pisanvs.cl">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="og:title" content="pisanvs official website">
     <meta name="og:description" content="Official website for pisanvs. DJ, Producer, Programmer and streamer">
     <meta name="og:type" content="website">
@@ -17,29 +17,23 @@
     <title>PISANVS</title>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-WZQJQTH');</script>
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start': new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WZQJQTH');</script>
     <!-- End Google Tag Manager -->
 </head>
 
 <body>
-    <script type="text/javascript">
-        // guessing most mobile users dont block javascript
-        // check if the user is on mobile
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            window.location.href = "./mobile/index.html";
-        }
-    </script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZQJQTH" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <div class="container flex-col">
+
+    <!-- Unified Content -->
+    <div class="content-wrapper">
         <div class="header">
             <span class="title orange logo">PISANVS</span>
             <span class="socials">
@@ -51,21 +45,147 @@
                         src="./assets/icons/linkedin.svg" alt="linkedin logo icon" class="social-icon"></a>
             </span>
         </div>
-        <div class="content-home flex-row">
-            <div class="bl-wrapper">
-                <span class="bl rot mlink"><a class="cyan" href="/me.html">ME</a></span>
-            </div>
-            <div class="bl-wrapper">
-                <span class="bl rot mlink"><a class="cyan" href="https://pisanvs.substack.com/?utm_source=pisanvs.cl&utm_medium=web&utm_campaign=blog_link">BLOG</a></span>
-            </div>
-            <div class="bl-wrapper">
-                <span class="bl rot mlink"><a class="cyan" href="//numotics.cl">NUMOTICS</a></span>
-            </div>
-            <div class="bl-wrapper">
-                <span class="bl rot mlink"><a class="cyan" href="/dev.html">PROGRAMMING</a></span>
-            </div>
+        <div class="content-links">
+            <span class="content-link"><a class="cyan" href="/me.html">ME</a></span>
+            <span class="content-link"><a class="cyan" href="https://pisanvs.substack.com/?utm_source=pisanvs.cl&utm_medium=web&utm_campaign=blog_link">BLOG</a></span>
+            <span class="content-link"><a class="cyan" href="//numotics.cl">NUMOTICS</a></span>
+            <span class="content-link"><a class="cyan" href="/dev.html">PROGRAMMING</a></span>
         </div>
     </div>
+
+    <style>
+        /* Common styles */
+        @font-face {
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: 300;
+            src: url("../assets/fonts/Roboto-Light.ttf") format("truetype");
+        }
+
+        @font-face {
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: 400;
+            src: url("../assets/fonts/Roboto-Regular.ttf") format("truetype");
+        }
+
+        @font-face {
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: 500;
+            src: url("../assets/fonts/Roboto-Medium.ttf") format("truetype");
+        }
+
+        @font-face {
+            font-family: "Roboto Mono";
+            font-style: normal;
+            src: url("../assets/fonts/RobotoMono-VariableFont_wght.ttf") format("truetype");
+        }
+
+        * {
+            color: #fff;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 0;
+        }
+
+        .title {
+            font-weight: 500;
+            font-size: 50px;
+            margin-right: 65px;
+        }
+
+        .social-icon {
+            width: 30px;
+            margin: 0 18px;
+        }
+
+        .cyan {
+            color: #18BCBC;
+            text-shadow: 10px 5px 60px rgba(255, 255, 255, 0.62);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            padding-top: 5em;
+            max-width: 68.5vw;
+            margin: 0 auto;
+            overflow: visible;
+        }
+
+        .content-links {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-top: 20vh;
+        }
+
+        .content-link {
+            flex: 0 0 15vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1em 0;
+            min-width: 0;
+        }
+
+        .content-link a {
+            font-weight: 500;
+            font-size: 64px;
+            text-shadow: 15px -15px 60px rgba(255, 255, 255, 0.385);
+        }
+
+        @media (min-width: 940px) {
+            .content-link {
+                position: relative;
+            }
+
+            .content-link a {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Media Queries */
+        @media (max-width: 940px) {
+            .header {
+                flex-direction: column;
+            }
+
+            .content-links {
+                flex-direction: column-reverse;
+                align-items: center;
+                padding-top: 5vh;
+            }
+
+            .content-link a {
+                font-size: 40px;
+            }
+
+            .content-link {
+                flex: 1 0 0vw;
+            }
+
+            .socials {
+                margin: 2em 0;
+            }
+
+            .title {
+                margin: 0 auto;
+            }
+        }
+    </style>
 </body>
 
 </html>
