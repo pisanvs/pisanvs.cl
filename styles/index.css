@@ -200,13 +200,13 @@ a {
 }
 
 .card-title {
-    font-size: 38px;
+    font-size: 2vw;
     margin-bottom: 0;
     color: #0f0;
 }
 
 .card-info {
-    font-size: 20px;
+    font-size: 1.05vw;
     color: #0f0;
 }
 
