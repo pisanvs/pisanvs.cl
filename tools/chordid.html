@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MIDI Chord Identifier</title>
+  <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tone@next/build/Tone.js"></script>
+  <style>
+    .piano-container {
+      display: flex;
+      position: relative;
+      height: 200px;
+      margin-top: 2rem;
+      padding-left: 30px;
+    }
+
+    .key-group {
+      position: relative;
+      width: 40px;
+    }
+
+    .white-key {
+      width: 40px;
+      height: 200px;
+      background: white;
+      border: 1px solid black;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    .black-key {
+      position: absolute;
+      width: 28px;
+      height: 120px;
+      background: black;
+      left: 100%;
+      transform: translateX(-50%);
+      top: 0;
+      z-index: 4;
+      cursor: pointer;
+    }
+
+    .active.white-key {
+      background: orange;
+    }
+
+    .active.black-key {
+      background: orangered;
+    }
+
+    .label {
+      position: absolute;
+      bottom: 5px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+    }
+  </style>
+  <script>
+    const heldNotes = new Set();
+    let midiAccess = null;
+    const midiToNoteName = Tonal.Note.fromMidi;
+    const noteToMidi = Tonal.Note.midi;
+
+	const volume = new Tone.Volume(0);
+
+    const sampler = new Tone.Sampler({
+      urls: {
+        "C4#": "C4.mp3",
+        "D#4": "Ds4.mp3",
+        "F#4": "Fs4.mp3",
+        "A4": "A4.mp3",
+      },
+      release: 1,
+      baseUrl: "https://tonejs.github.io/audio/salamander/",
+    }).connect(volume);
+
+	volume.toDestination();
+    
+    Tone.loaded().then(() => {
+      console.log("Sampler loaded");
+    });
+    
+    function playNote(note) {
+      Tone.start();
+      sampler.triggerAttack(note);
+    }
+    
+    function stopNote(note) {
+      sampler.triggerRelease(note);
+    }
+
+    function createPiano(containerId, from = 48, to = 83) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      container.className = 'piano-container';
+
+      const majorScale = [true, false, true, false, true, true, false, true, false, true, false, true];
+	  const middleC = 60;
+
+	  const isWhiteKey = (note) => majorScale[(note % 12)];
+      
+      let midi = from;
+      while (midi <= to) {
+        const group = document.createElement('div');
+        group.className = 'key-group';
+
+        if (isWhiteKey(midi)) {
+          const whiteKey = document.createElement('div');
+          whiteKey.className = 'white-key key';
+          whiteKey.dataset.midi = midi;
+          group.appendChild(whiteKey);
+
+          if (midi + 1 <= to) {
+            if (!isWhiteKey(midi+1)) {
+              const blackKey = document.createElement('div');
+              blackKey.className = 'black-key key';
+              blackKey.dataset.midi = midi + 1;
+              group.appendChild(blackKey);
+        midi++;
+      }
+    }
+        }
+
+        container.appendChild(group);
+        midi++;
+      }
+    }
+
+    function updatePianoDisplay(activeMidis, root) {
+      document.querySelectorAll(".key").forEach(key => {
+        const midi = parseInt(key.dataset.midi);
+        const note = Tonal.Note.fromMidi(midi);
+        const pitchClass = Tonal.Note.pitchClass(note);
+    
+        if (activeMidis.has(midi)) {
+          key.classList.add("active");
+    
+          const interval = root ? Tonal.Interval.distance(root, pitchClass) : null;
+          const degree = root ? simplifyInterval(interval) : "";
+          let label = key.querySelector(".label");
+          if (!label) {
+            label = document.createElement("div");
+            label.className = "label";
+            key.appendChild(label);
+          }
+          label.textContent = root == pitchClass ? root : degree;
+        } else {
+          key.classList.remove("active");
+          const label = key.querySelector(".label");
+          if (label) label.remove();
+        }
+      });
+    }
+
+	function simplifyInterval(interval) {
+      if (!interval) return "";
+      const semitones = Tonal.Interval.semitones(interval);
+      const map = {
+        0: "1", 1: "b2", 2: "2", 3: "b3", 4: "3",
+        5: "4", 6: "b5", 7: "5", 8: "b6", 9: "6",
+        10: "b7", 11: "7"
+      };
+      return map[semitones % 12] || "";
+    }
+
+    function handleMIDIMessage({ data }) {
+      const [cmd, note, velocity] = data;
+    
+      const noteName = midiToNoteName(note);
+      if (cmd === 144 && velocity > 0) {
+        heldNotes.add(note);
+        playNote(noteName);
+      }
+      if ((cmd === 128) || (cmd === 144 && velocity === 0)) {
+        heldNotes.delete(note);
+        stopNote(noteName);
+      }
+    
+      const midiNotes = [...heldNotes].sort((a, b) => a - b);
+      const rootMidi = midiNotes[0];
+      const root = Tonal.Note.pitchClass(midiToNoteName(rootMidi));
+
+      const pitchClasses = midiNotes.map(midi => Tonal.Note.pitchClass(midiToNoteName(midi)));
+      const uniqueSet = [...new Set(pitchClasses)].sort();
+    
+      let primary = null;
+      for (const type of Tonal.ChordType.symbols()) {
+        const chord = Tonal.Chord.get(`${root}${type}`);
+        if (chord.empty || !root) continue;
+        const chordNotesSet = chord.notes.map(pc => Tonal.Note.pitchClass(pc));
+
+        if (Tonal.Pcset.get(chordNotesSet) == Tonal.Pcset.get(pitchClasses.sort())) {
+          primary = `${root}${type}`;
+          break;
+        }
+      }
+    
+      const alternates = [];
+      if (!primary) {
+        for (const candidateRoot of uniqueSet) {
+          for (const type of Tonal.ChordType.symbols()) {
+            const chord = Tonal.Chord.get(`${candidateRoot}${type}`);
+            if (chord.empty) continue;
+            const chordNotesSet = chord.notes.map(pc => Tonal.Note.pitchClass(pc));
+
+            if (Tonal.Pcset.get(chordNotesSet) == Tonal.Pcset.get(pitchClasses)) {
+              const name = `${candidateRoot}${type}`;
+              if (!alternates.includes(name)) alternates.push(name);
+            }
+          }
+        }
+      }
+      console.log(alternates);
+      const display = primary || (alternates.length ? alternates[0] : "—");
+      const altDisplay = alternates.filter(a => a !== display).slice(0, 3).join(" / ");
+      document.getElementById("chord").textContent = altDisplay
+        ? `${display} (${altDisplay})`
+        : display;
+    
+      updatePianoDisplay(new Set(heldNotes), root);
+    }
+
+    async function initMIDI() {
+      try {
+        midiAccess = await navigator.requestMIDIAccess();
+        document.getElementById("status").textContent = "MIDI connected.";
+        populateDeviceSelector();
+      } catch {
+        document.getElementById("status").textContent = "Failed to connect MIDI.";
+      }
+    }
+
+    function populateDeviceSelector() {
+      const deviceSelector = document.getElementById("deviceSelector");
+      deviceSelector.innerHTML = "";
+      for (const input of midiAccess.inputs.values()) {
+        const option = document.createElement("option");
+        option.value = input.id;
+        option.textContent = input.name;
+        deviceSelector.appendChild(option);
+      }
+      if (deviceSelector.options.length > 0) {
+        selectDevice(deviceSelector.options[0].value);
+      }
+    }
+
+    function selectDevice(deviceId) {
+      for (const input of midiAccess.inputs.values()) {
+        input.onmidimessage = null;
+        if (input.id === deviceId) {
+          input.onmidimessage = handleMIDIMessage;
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("deviceSelector").addEventListener("change", (e) => {
+        selectDevice(e.target.value);
+      });
+	  
+      document.getElementById("volumeControl").addEventListener("input", (e) => {
+        const db = parseInt(e.target.value, 10);
+        volume.volume.value = db;
+        document.getElementById("volumeDisplay").textContent = `${db} dB`;
+      });
+      createPiano("piano");
+      initMIDI();
+    });
+  </script>
+</head>
+<body>
+  <h1>MIDI Chord Identifier</h1>
+  <p id="status">Waiting for MIDI...</p>
+  <label for="deviceSelector">Select MIDI Device:</label>
+  <select id="deviceSelector"></select>
+  <label for="volumeControl">Volume:</label>
+  <input type="range" id="volumeControl" min="-60" max="0" value="0" step="1">
+  <span id="volumeDisplay">0 dB</span>
+  <div id="chord" style="font-size: 2rem; margin-top: 1rem;">—</div>
+  <div id="piano"></div>
+</body>
+</html>
