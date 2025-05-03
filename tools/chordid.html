@@ -102,6 +102,69 @@
 
 	  const isWhiteKey = (note) => majorScale[(note % 12)];
       
+      const toggleNote = (midi) => {
+        const noteName = midiToNoteName(midi);
+        if (heldNotes.has(midi)) {
+          heldNotes.delete(midi);
+        stopNote(noteName);
+        } else {
+          heldNotes.add(midi);
+        playNote(noteName);
+      }
+        updateDisplay();
+      };
+    
+      const updateDisplay = () => {
+        handleChordRecognition();
+        updatePianoDisplay(new Set(heldNotes), getRootNote());
+      };
+
+      const getRootNote = () => {
+      const midiNotes = [...heldNotes].sort((a, b) => a - b);
+        return midiNotes.length ? Tonal.Note.pitchClass(midiToNoteName(midiNotes[0])) : null;
+      };
+
+      const handleChordRecognition = () => {
+        const midiNotes = [...heldNotes].sort((a, b) => a - b);
+        const root = getRootNote();
+
+      const pitchClasses = midiNotes.map(midi => Tonal.Note.pitchClass(midiToNoteName(midi)));
+      const uniqueSet = [...new Set(pitchClasses)].sort();
+    
+      let primary = null;
+      for (const type of Tonal.ChordType.symbols()) {
+        const chord = Tonal.Chord.get(`${root}${type}`);
+        if (chord.empty || !root) continue;
+        const chordNotesSet = chord.notes.map(pc => Tonal.Note.pitchClass(pc));
+
+        if (Tonal.Pcset.get(chordNotesSet) == Tonal.Pcset.get(pitchClasses.sort())) {
+          primary = `${root}${type}`;
+          break;
+        }
+      }
+    
+      const alternates = [];
+      if (!primary) {
+        for (const candidateRoot of uniqueSet) {
+          for (const type of Tonal.ChordType.symbols()) {
+            const chord = Tonal.Chord.get(`${candidateRoot}${type}`);
+            if (chord.empty) continue;
+            const chordNotesSet = chord.notes.map(pc => Tonal.Note.pitchClass(pc));
+
+            if (Tonal.Pcset.get(chordNotesSet) == Tonal.Pcset.get(pitchClasses)) {
+              const name = `${candidateRoot}${type}`;
+              if (!alternates.includes(name)) alternates.push(name);
+            }
+          }
+        }
+      }
+      const display = primary || (alternates.length ? alternates[0] : "—");
+      const altDisplay = alternates.filter(a => a !== display).slice(0, 3).join(" / ");
+      document.getElementById("chord").textContent = altDisplay
+        ? `${display} (${altDisplay})`
+        : display;
+      };
+
       let midi = from;
       while (midi <= to) {
         const group = document.createElement('div');
@@ -111,17 +174,19 @@
           const whiteKey = document.createElement('div');
           whiteKey.className = 'white-key key';
           whiteKey.dataset.midi = midi;
+          whiteKey.addEventListener('mousedown', () => toggleNote(parseInt(whiteKey.dataset.midi)));
           group.appendChild(whiteKey);
 
           if (midi + 1 <= to) {
-            if (!isWhiteKey(midi+1)) {
+            if (!isWhiteKey(midi + 1)) {
               const blackKey = document.createElement('div');
               blackKey.className = 'black-key key';
               blackKey.dataset.midi = midi + 1;
+              blackKey.addEventListener('mousedown', () => toggleNote(parseInt(blackKey.dataset.midi)));
               group.appendChild(blackKey);
-        midi++;
-      }
-    }
+              midi++;
+            }
+          }
         }
 
         container.appendChild(group);
