@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Vaso Extra - Una Historia de Esperanza</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .glass-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 2rem 1.5rem;
+        }
+
+        .story-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .story-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .story-text {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #34495e;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc8 100%);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .impact-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem 0;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .impact-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            margin: 2rem -1.5rem 0;
+            color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #f5576c;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .connection-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #3498db 50%, transparent 100%);
+            margin: 1.5rem 0;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="glass-icon">💧</div>
+            <h1>Tu Vaso Extra</h1>
+            <p>Una pequeña acción, un gran impacto</p>
+        </div>
+
+        <div class="content">
+            <div class="story-section">
+                <div class="story-title">
+                    🌟 La Historia de Amara
+                </div>
+                <div class="story-text">
+                    Amara tiene 12 años y vive en Kibera, Nairobi. Cada mañana camina <span class="highlight">30 minutos</span> para llegar a la escuela, donde ahora tiene acceso a agua limpia gracias a un programa como el tuyo.
+                </div>
+                <div class="story-text">
+                    Antes, perdía clases por enfermedades. Hoy, <span class="highlight">sueña con ser doctora</span> y ayudar a su comunidad. Su sonrisa es la prueba de que pequeños gestos crean grandes cambios.
+                </div>
+            </div>
+
+            <div class="connection-line"></div>
+
+            <div class="impact-box">
+                <div class="impact-number pulse">1</div>
+                <div>vaso = 30 días de agua limpia</div>
+                <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
+                    para un niño como Amara
+                </div>
+            </div>
+
+            <div class="story-section">
+                <div class="story-title">
+                    🤝 Tu Momento de Conexión
+                </div>
+                <div class="story-text">
+                    En este instante, mientras decides sobre tu vaso, en algún lugar del mundo un niño está esperando. No por caridad, sino por la <span class="highlight">oportunidad de crecer</span> con las mismas posibilidades que todos merecemos.
+                </div>
+                <div class="story-text">
+                    Tu vaso no es solo un objeto. Es un <span class="highlight">puente invisible</span> que conecta tu mesa con la esperanza de una familia.
+                </div>
+            </div>
+
+            <div class="connection-line"></div>
+
+            <div class="story-section">
+                <div class="story-title">
+                    ✨ El Poder de Elegir
+                </div>
+                <div class="story-text">
+                    Tienes en tus manos algo extraordinario: <span class="highlight">la capacidad de cambiar una vida</span> mientras disfrutas tu comida. 
+                </div>
+                <div class="story-text">
+                    Miles de personas como tú ya forman parte de esta red de generosidad. Cada vaso cuenta una nueva historia de esperanza.
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2>¿Te unes a esta historia?</h2>
+                <p style="margin: 1rem 0;">Haz que tu vaso sea parte del cambio</p>
+                <a href="#" class="cta-button" onclick="showThankYou()">Sí, quiero participar</a>
+                <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">
+                    Con total transparencia podrás ver el impacto real
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💙 Water is Life - Transparencia total en cada gota</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">Rastrea tu impacto en tiempo real</p>
+        </div>
+    </div>
+
+    <script>
+        function showThankYou() {
+            const cta = document.querySelector('.cta-section');
+            cta.innerHTML = `
+                <h2 style="color: white;">¡Gracias por unirte! 🎉</h2>
+                <p style="margin: 1rem 0;">Tu vaso ya está creando impacto</p>
+                <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
+                    <p style="font-size: 0.9rem;">Recibirás un email con el seguimiento de tu aporte</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">¡Comparte esta experiencia! #VasoExtra</p>
+                </div>
+            `;
+        }
+
+        // Efecto de aparición progresiva
+        window.addEventListener('load', function() {
+            const sections = document.querySelectorAll('.story-section, .impact-box');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
