@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Estudio de Caminata Aleatoria — Standalone</title>
+  <style>
+    /* Minimal, clean styles (no Tailwind required) */
+    :root{
+      --bg1:#eff6ff; --bg2:#eef2ff; --card:#fff; --muted:#6b7280;
+      --accent:#2563eb; --good:#10b981; --danger:#ef4444; --glass:#f3f4f6;
+    }
+    html,body,#root{height:100%; margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{background:linear-gradient(135deg,var(--bg1),var(--bg2)); padding:24px; box-sizing:border-box;}
+    .container{max-width:980px;margin:0 auto;}
+    .card{background:var(--card); border-radius:12px; box-shadow:0 6px 24px rgba(16,24,40,0.06); padding:20px; margin-bottom:16px;}
+    h1,h2,h3{margin:0 0 8px 0;}
+    .muted{color:var(--muted);}
+    input[type="text"]{width:100%; padding:10px;border:1px solid #d1d5db;border-radius:8px;box-sizing:border-box;}
+    button{cursor:pointer;border:0;padding:10px 14px;border-radius:8px;font-weight:600;}
+    .btn-primary{background:var(--accent);color:white;}
+    .btn-green{background:var(--good);color:white;}
+    .btn-gray{background:#374151;color:white;}
+    .center{text-align:center;}
+    .row{display:flex;gap:12px;align-items:center;}
+    .col{display:flex;flex-direction:column;gap:8px;}
+    .small{font-size:13px;color:#4b5563;}
+    .grid{display:grid;gap:12px;}
+    .controls{display:flex;flex-direction:column;align-items:center;gap:8px;}
+    .arrow-btn{width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(180deg,#10b981,#059669);color:#fff;}
+    .arrow-row{display:flex;gap:8px;}
+    .list-compact{max-height:200px;overflow:auto;border-top:1px solid #e6e6e6;padding-top:8px;}
+    .chip{display:inline-flex;align-items:center;padding:6px 8px;border-radius:999px;font-weight:600;}
+    canvas{display:block;margin:0 auto;border-radius:8px;}
+    .footer-space{height:32px;}
+  </style>
+
+  <!-- React + ReactDOM UMD (development) and Babel for JSX -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Component code (JSX compiled by Babel in-browser) -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    /* Tiny inline SVG icon components to replace lucide-react */
+    const IconRotate = ({size=18}) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 13v6h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+    const IconDatabase = ({size=18}) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+        <ellipse cx="12" cy="6" rx="8" ry="3" stroke="currentColor" strokeWidth="1.6"/>
+        <path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6" stroke="currentColor" strokeWidth="1.6"/>
+        <path d="M4 12v6c0 1.657 3.582 3 8 3s8-1.343 8-3v-6" stroke="currentColor" strokeWidth="1.6" opacity="0.6"/>
+      </svg>
+    );
+
+    function RandomWalkGame() {
+      // --- state
+      const [stage, setStage] = useState('consent'); // consent, input, instructions, walk, results
+      const [name, setName] = useState('');
+      const [consented, setConsented] = useState(false);
+      const [position, setPosition] = useState({ x: 0, y: 0 });
+      const [path, setPath] = useState([{ x: 0, y: 0 }]);
+      const [stepCount, setStepCount] = useState(0);
+      const [allWalks, setAllWalks] = useState([]);
+      const [randomWalk, setRandomWalk] = useState([]);
+      const [currentRound, setCurrentRound] = useState(1);
+      const [showImport, setShowImport] = useState(false);
+      const [isSaving, setIsSaving] = useState(false);
+
+      // 3 rounds con historial + 3 rondas ciegas → 6 rondas totales
+      const maxSteps = 50;
+      const totalRounds = 6;               // <-- ahora 6
+      const blindStartRound = 4;           // a partir de la ronda 4 se vuelve "ciega"
+
+      // URL de Apps Script (si lo tienes configurado)
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwE4mbDhCdoFUQ8mp21lT8gyKE99LauMLB1A0ybuFgI544IOZo_a9HvVdAdaZSFAd1XiA/exec';
+
+      const canvasRef = useRef(null);
+
+      // cargar caminatas guardadas
+      useEffect(() => {
+        try {
+          const stored = JSON.parse(localStorage.getItem('randomWalkData') || '[]');
+          if (Array.isArray(stored)) setAllWalks(stored);
+        } catch (e) {
+          console.warn('No stored walks or invalid JSON');
+        }
+      }, []);
+
+      // generador de caminata aleatoria (solo para comparar)
+      const generateRandomWalk = () => {
+        const walk = [{ x: 0, y: 0 }];
+        let pos = { x: 0, y: 0 };
+        const directions = [
+          { x: 0, y: -1 },
+          { x: 0, y: 1 },
+          { x: -1, y: 0 },
+          { x: 1, y: 0 }
+        ];
+        for (let i = 0; i < maxSteps; i++) {
+          const dir = directions[Math.floor(Math.random() * 4)];
+          pos = { x: pos.x + dir.x, y: pos.y + dir.y };
+          walk.push({ ...pos });
+        }
+        return walk;
+      };
+
+      // ---- Renderizado del canvas -------------------------------------------------
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const scale = 20;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // grid
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        for (let i = -15; i <= 15; i++) {
+          ctx.beginPath();
+          ctx.moveTo(centerX + i * scale, 0);
+          ctx.lineTo(centerX + i * scale, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, centerY + i * scale);
+          ctx.lineTo(canvas.width, centerY + i * scale);
+          ctx.stroke();
+        }
+
+        // ---- HISTORICAL WALKS (solo si NO estamos en modo ciego) -----------------
+        const isBlind = currentRound >= blindStartRound;
+        if (!isBlind) {
+          allWalks.forEach((walk) => {
+            ctx.strokeStyle = 'rgba(100,116,139,0.18)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            walk.path.forEach((p, i) => {
+              const x = centerX + p.x * scale;
+              const y = centerY + p.y * scale;
+              if (i === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+          });
+        }
+
+        // random walk (solo en resultados)
+        if (stage === 'results' && Array.isArray(randomWalk)) {
+          ctx.strokeStyle = 'rgba(239,68,68,0.6)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          randomWalk.forEach((p, i) => {
+            const x = centerX + p.x * scale;
+            const y = centerY + p.y * scale;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+        }
+
+        // path del usuario
+        ctx.strokeStyle = stage === 'results' ? '#3b82f6' : '#10b981';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        path.forEach((p, i) => {
+          const x = centerX + p.x * scale;
+          const y = centerY + p.y * scale;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // punto de posición actual
+        if (path.length > 0) {
+          const curr = path[path.length - 1];
+          ctx.fillStyle = stage === 'results' ? '#3b82f6' : '#10b981';
+          ctx.beginPath();
+          ctx.arc(centerX + curr.x * scale, centerY + curr.y * scale, 6, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+
+        // punto central
+        ctx.fillStyle = '#6b7280';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+      }, [path, allWalks, stage, randomWalk, currentRound]);
+
+      // ---- Movimientos ------------------------------------------------------------
+      const handleMove = (dx, dy) => {
+        if (stepCount >= maxSteps || isSaving) return;
+        const newPos = { x: position.x + dx, y: position.y + dy };
+        setPosition(newPos);
+        setPath(prev => {
+          const nxt = [...prev, newPos];
+          // si se alcanzó el máximo, finalizar
+          if (nxt.length >= maxSteps) finishWalk(nxt);
+          return nxt;
+        });
+        setStepCount(prev => prev + 1);
+      };
+
+      // ---- Finalizar caminata ------------------------------------------------------
+      const finishWalk = async (finalPath) => {
+        setIsSaving(true);
+        const walkData = {
+          name,
+          round: currentRound,
+          timestamp: new Date().toISOString(),
+          path: finalPath
+        };
+
+        // actualizar almacenamiento local
+        const updated = [...allWalks, walkData];
+        setAllWalks(updated);
+        try { localStorage.setItem('randomWalkData', JSON.stringify(updated)); } catch(e){}
+
+        // intentar envío a Google Sheets
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({ payload: JSON.stringify(walkData) }).toString()
+          });
+          console.log('Datos enviados a Google Sheets (intentado).');
+        } catch (err) {
+          console.warn('No se pudo enviar a Google Sheets:', err.message || err);
+        }
+
+        setIsSaving(false);
+        setRandomWalk(generateRandomWalk());
+        setStage('results');
+      };
+
+      // ---- Reiniciar todo ---------------------------------------------------------
+      const reset = () => {
+        setStage('consent');
+        setName('');
+        setConsented(false);
+        setPosition({ x: 0, y: 0 });
+        setPath([{ x: 0, y: 0 }]);
+        setStepCount(0);
+        setRandomWalk([]);
+        setCurrentRound(1);
+      };
+
+      // ---- Avanzar a la siguiente ronda --------------------------------------------
+      const nextRound = () => {
+        // si vamos a entrar en la fase ciega, añadimos "(blind)" al nombre (una sola vez)
+        const next = currentRound + 1;
+        if (next === blindStartRound && !name.includes(' (blind)')) {
+          setName(prev => prev + ' (blind)');
+        }
+
+        setPosition({ x: 0, y: 0 });
+        setPath([{ x: 0, y: 0 }]);
+        setStepCount(0);
+        setRandomWalk([]);
+        setCurrentRound(next);
+        setStage('instructions');
+      };
+
+      // ---- Export / Import ---------------------------------------------------------
+      const exportData = () => {
+        const dataStr = JSON.stringify(allWalks, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `datos_caminata_aleatoria_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const importData = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const imported = JSON.parse(ev.target.result);
+            if (!Array.isArray(imported)) throw new Error('Formato inválido (se esperaba array)');
+            setAllWalks(imported);
+            localStorage.setItem('randomWalkData', JSON.stringify(imported));
+            setShowImport(false);
+            alert(`${imported.length} caminatas importadas exitosamente`);
+          } catch (err) {
+            alert('Error al importar datos. Asegúrate de que el archivo sea válido JSON de caminatas.');
+            console.error(err);
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      const startWalk = () => {
+        setPosition({ x: 0, y: 0 });
+        setPath([{ x: 0, y: 0 }]);
+        setStepCount(0);
+        setStage('walk');
+      };
+
+      // ---- Controles de teclado ----------------------------------------------------
+      useEffect(() => {
+        if (stage !== 'walk') return;
+        const handler = (e) => {
+          if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+            if (e.key === 'ArrowUp') handleMove(0, -1);
+            if (e.key === 'ArrowDown') handleMove(0, 1);
+            if (e.key === 'ArrowLeft') handleMove(-1, 0);
+            if (e.key === 'ArrowRight') handleMove(1, 0);
+          }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+      }, [stage, stepCount, position, isSaving]);
+
+      // ---- Helpers para resultados -------------------------------------------------
+      const calculateDistance = (p) => {
+        if (!Array.isArray(p) || p.length === 0) return '0.00';
+        const final = p[p.length - 1] || { x:0,y:0 };
+        return Math.sqrt(final.x * final.x + final.y * final.y).toFixed(2);
+      };
+
+      // ----------------------------------------------------------------------------- 
+      // -------------------------- UI POR ESTADO -----------------------------------
+      // ----------------------------------------------------------------------------- 
+
+      // ---------- Consentimiento ----------
+      if (stage === 'consent') {
+        return (
+          <div className="container">
+            <div className="card">
+              <h1>Estudio de Caminata Aleatoria</h1>
+              <div style={{marginTop:12}} className="card">
+                <h3>Formulario de Consentimiento</h3>
+                <div className="small" style={{marginTop:8}}>
+                  <p><strong>Propósito:</strong> Recopilar datos sobre caminata humana aleatoria y compararla con caminatas verdaderamente aleatorias.</p>
+                  <p><strong>Procedimiento:</strong> Harás 50 pasos usando flechas o botones; la caminata se almacenará con tu nombre.</p>
+                  <p><strong>Almacenamiento:</strong> El patrón se guarda localmente y se intenta enviar a Google Sheets si está configurado.</p>
+                  <p><strong>Voluntario:</strong> Puedes dejar de participar cuando quieras.</p>
+                </div>
+              </div>
+
+              <div style={{display:'flex',alignItems:'center',gap:12, marginTop:12}}>
+                <input id="consentChk" type="checkbox" checked={consented} onChange={(e)=>setConsented(e.target.checked)} />
+                <label htmlFor="consentChk" className="muted">He leído y acepto participar en este estudio</label>
+              </div>
+
+              <div style={{marginTop:12}}>
+                <button className="btn-primary" style={{width:'100%'}} onClick={()=>consented && setStage('input')} disabled={!consented}>
+                  Continuar
+                </button>
+              </div>
+
+              {!allWalks.length && !showImport && (
+                <div style={{marginTop:10}}>
+                  <button className="btn-gray" style={{width:'100%'}} onClick={()=>setShowImport(true)}>
+                    Importar Datos Previos (Solo Experimentador)
+                  </button>
+                </div>
+              )}
+
+              {showImport && (
+                <div style={{marginTop:10}}>
+                  <input type="file" accept=".json" onChange={importData} />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      // ---------- Entrada de datos ----------
+      if (stage === 'input') {
+        return (
+          <div className="container">
+            <div className="card" style={{maxWidth:560,margin:'0 auto'}}>
+              <h2>Información del Participante</h2>
+              <label style={{marginTop:12}} className="small">Tu Nombre</label>
+              <input type="text" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Ingresa tu nombre" />
+              <div style={{marginTop:12}}>
+                <button className="btn-primary" style={{width:'100%'}} onClick={()=>name.trim() && setStage('instructions')} disabled={!name.trim()}>
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // ---------- Instrucciones ----------
+      if (stage === 'instructions') {
+        const isBlind = currentRound >= blindStartRound;
+        return (
+          <div className="container">
+            <div className="card">
+              <h2>Ronda {currentRound} de {totalRounds}{isBlind && ' (ciega)'}</h2>
+              <h3>Instrucciones{isBlind && ' (ciegas)'}</h3>
+              <div className="small" style={{marginTop:8}}>
+                <p>Comenzarás desde el centro y tomarás <strong>50 pasos</strong> en cualquier dirección (arriba/abajo/izq/der).</p>
+                <p><strong>¡Sé lo más aleatorio posible!</strong></p>
+                {currentRound > 1 && !isBlind && <p style={{color:'#2563eb'}}>Verás las caminatas anteriores mientras te mueves.</p>}
+                {isBlind && <p style={{color:'#d97706'}}>En esta fase no se muestran caminatas anteriores ni datos de otros participantes.</p>}
+                <p>Puedes usar:</p>
+                <ul className="small">
+                  <li>Las teclas de flecha</li>
+                  <li>Los botones en pantalla</li>
+                </ul>
+              </div>
+
+              <div style={{marginTop:12}}>
+                <button className="btn-green" style={{width:'100%'}} onClick={startWalk}>Comenzar Caminata {currentRound}</button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // ---------- Caminata ----------
+      if (stage === 'walk') {
+        const isBlind = currentRound >= blindStartRound;
+        return (
+          <div className="container">
+            <div className="card">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <h2>Ronda {currentRound} de {totalRounds}{isBlind && ' (ciega)'}</h2>
+                <div className="small"><strong>Pasos:</strong> {stepCount} / {maxSteps}</div>
+              </div>
+              <div className="small" style={{marginTop:6}}>Usa las teclas de flecha o los botones. ¡Intenta ser lo más aleatorio posible!</div>
+              {!isBlind && allWalks.length > 0 && <div className="small" style={{marginTop:6,color:'#4b5563'}}>Las líneas grises muestran caminatas anteriores.</div>}
+              {isSaving && <div style={{marginTop:6,color:'#2563eb'}}>Guardando datos...</div>}
+            </div>
+
+            <div className="card" style={{textAlign:'center'}}>
+              <canvas ref={canvasRef} width={600} height={600} />
+            </div>
+
+            <div className="card" style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+              <div className="controls">
+                <button className="arrow-btn" onClick={()=>handleMove(0,-1)} disabled={isSaving} title="Arriba">↑</button>
+                <div className="arrow-row">
+                  <button className="arrow-btn" onClick={()=>handleMove(-1,0)} disabled={isSaving} title="Izquierda">←</button>
+                  <button className="arrow-btn" onClick={()=>handleMove(0,1)} disabled={isSaving} title="Abajo">↓</button>
+                  <button className="arrow-btn" onClick={()=>handleMove(1,0)} disabled={isSaving} title="Derecha">→</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // ---------- Resultados ----------
+      if (stage === 'results') {
+        const isBlind = currentRound >= blindStartRound;
+        const userDistance = calculateDistance(path);
+        const randomDistance = calculateDistance(randomWalk);
+        const avgDistance = allWalks.length > 0
+          ? (allWalks.reduce((s,w)=>s+parseFloat(calculateDistance(w.path)),0)/allWalks.length).toFixed(2)
+          : '0.00';
+
+        return (
+          <div className="container">
+            <div className="card">
+              <h2>Resultados{isBlind && ' (ciega)'}</h2>
+              <p className="small">Así se compara tu caminata con una caminata aleatoria y, cuando corresponde, con participantes previos.</p>
+
+              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginTop:12}}>
+                <div style={{background:'#eff6ff',padding:10,borderRadius:8}}>
+                  <div className="small">Tu Distancia</div>
+                  <div style={{fontSize:20,fontWeight:700,color:'#2563eb'}}>{userDistance}</div>
+                </div>
+                <div style={{background:'#fee2e2',padding:10,borderRadius:8}}>
+                  <div className="small">Caminata Aleatoria</div>
+                  <div style={{fontSize:20,fontWeight:700,color:'#ef4444'}}>{randomDistance}</div>
+                </div>
+                <div style={{background:'#f3f4f6',padding:10,borderRadius:8}}>
+                  <div className="small">Promedio (Todos)</div>
+                  <div style={{fontSize:20,fontWeight:700,color:'#374151'}}>{avgDistance}</div>
+                </div>
+              </div>
+
+              <div style={{marginTop:12,display:'flex',gap:8,alignItems:'center'}}>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}><div style={{width:12,height:12,background:'#2563eb',borderRadius:4}}></div><span className="small">Tu Caminata</span></div>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}><div style={{width:12,height:12,background:'#ef4444',borderRadius:4}}></div><span className="small">Caminata Aleatoria</span></div>
+                {!isBlind && <div style={{display:'flex',gap:8,alignItems:'center'}}><div style={{width:12,height:12,background:'#9ca3af',borderRadius:4}}></div><span className="small">Caminatas Anteriores</span></div>}
+              </div>
+            </div>
+
+            <div className="card">
+              <canvas ref={canvasRef} width={600} height={600} />
+            </div>
+
+            {/* Sólo se muestra la tabla de datos cuando NO estamos en modo ciego */}
+            {!isBlind && (
+              <div className="card">
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                  <h3 style={{display:'flex',alignItems:'center',gap:8}}><IconDatabase /> Datos Recopilados ({allWalks.length} caminatas)</h3>
+                  <div style={{display:'flex',gap:8}}>
+                    <button className="btn-gray" onClick={exportData}><IconDatabase /> Exportar</button>
+                  </div>
+                </div>
+
+                <div className="list-compact" style={{marginTop:10}}>
+                  {allWalks.map((walk, idx) => (
+                    <div key={idx} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid #eee'}}>
+                      <div style={{fontWeight:600}}>{walk.name} (Ronda {walk.round})</div>
+                      <div className="small">Dist: {calculateDistance(walk.path)} | {new Date(walk.timestamp).toLocaleString()}</div>
+                    </div>
+                  ))}
+                  {!allWalks.length && <div className="small">Aún no hay caminatas registradas.</div>}
+                </div>
+              </div>
+            )}
+
+            <div style={{display:'grid',gap:8}}>
+              {currentRound < totalRounds ? (
+                <button className="btn-primary" onClick={nextRound}>Continuar a Ronda {currentRound + 1}{(currentRound + 1) >= blindStartRound && ' (ciega)'}</button>
+              ) : (
+                <div style={{background:'#ecfdf5',borderLeft:'4px solid #10b981',padding:10,borderRadius:8}}>
+                  <strong>¡Gracias por completar las {totalRounds} rondas!</strong>
+                </div>
+              )}
+
+              <button className="btn-gray" onClick={()=>{
+                reset();
+              }}>
+                <IconRotate /> Iniciar Nueva Sesión de Participante
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      return null;
+    }
+
+    // Render
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<RandomWalkGame />);
+  </script>
+</body>
+</html>
