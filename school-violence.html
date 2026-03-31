@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Violencia Escolar en Chile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0B0B0B;
+      --text: #D1CCC4;
+      --text-muted: #7A7670;
+      --text-faint: #3E3B37;
+      --accent-death: #943333;
+      --accent-death-dim: #5C2222;
+      --line: #1E1D1B;
+      --card-bg: #131210;
+      --card-border: #1E1D1B;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      transition: background-color 0.8s ease;
+    }
+
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 0.8s ease;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── HEADER ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeIn 2s ease 0.5s forwards;
+    }
+
+    .hero .subtitle {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeIn 2s ease 1.2s forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 3rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 2s ease 2.5s forwards, pulse 3s ease-in-out 3s infinite;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ─── YEAR INDICATOR ─── */
+    .year-indicator {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+      color: var(--text-faint);
+      z-index: 100;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      opacity: 0;
+      letter-spacing: 0.03em;
+      text-align: right;
+      text-transform: capitalize;
+    }
+
+    .year-indicator.visible {
+      opacity: 1;
+    }
+
+    /* ─── DAYS COUNTER ─── */
+    .days-counter {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    .days-counter.visible {
+      opacity: 1;
+    }
+
+    .days-counter .dc-number {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .days-counter .dc-label {
+      text-transform: uppercase;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+    }
+
+    /* ─── VIGNETTE ─── */
+    .vignette {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(60,10,10,0.5) 100%);
+    }
+
+    /* ─── TIMELINE ─── */
+    .timeline {
+      position: relative;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 0 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 2rem;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--line);
+    }
+
+    @media (min-width: 640px) {
+      .timeline { padding-left: 3.5rem; }
+      .timeline::before { left: 3.5rem; }
+    }
+
+    /* ─── EVENT CARD ─── */
+    .event {
+      position: relative;
+      padding-left: 2rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .event.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .event::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0.6rem;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-faint);
+      transition: background 0.5s ease;
+    }
+
+    .event.revealed::before {
+      background: var(--text-muted);
+    }
+
+    .event.has-deaths::before {
+      background: var(--accent-death);
+      box-shadow: 0 0 8px var(--accent-death-dim);
+    }
+
+    .event-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .event-location {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+
+    .event-description {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    .event-toll {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+    }
+
+    .event-toll .dead {
+      color: var(--accent-death);
+    }
+
+    /* ─── DECADE MARKERS ─── */
+    .decade-marker {
+      position: relative;
+      padding-left: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .decade-marker.revealed {
+      opacity: 1;
+    }
+
+    .decade-marker::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 11px;
+      height: 1px;
+      background: var(--text-faint);
+    }
+
+    /* ─── CLOSING ─── */
+    .closing {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .closing p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+
+    .closing p.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .closing .total {
+      margin-top: 2.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 1.5s ease 0.5s;
+    }
+
+    .closing .total.revealed {
+      opacity: 1;
+    }
+
+    /* ─── DENSITY LABEL ─── */
+    .density-note {
+      position: relative;
+      padding-left: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .density-note.revealed {
+      opacity: 0.6;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .timeline { padding-left: 1.5rem; }
+      .timeline::before { left: 1.5rem; }
+      .event { padding-left: 1.5rem; }
+      .decade-marker { padding-left: 1.5rem; }
+      .density-note { padding-left: 1.5rem; }
+      .year-indicator {
+        font-size: 1.2rem;
+        top: 1rem;
+        right: 1rem;
+      }
+      .days-counter {
+        bottom: 1rem;
+        right: 1rem;
+      }
+      .days-counter .dc-number {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="year-indicator" id="yearIndicator"></div>
+  <div class="days-counter" id="daysCounter">
+    <span class="dc-number" id="dcNumber">—</span>
+    <span class="dc-label" id="dcLabel">días hasta el siguiente ataque</span>
+  </div>
+  <div class="vignette" id="vignette"></div>
+
+  <section class="hero">
+    <h1>Violencia escolar en Chile</h1>
+    <p class="subtitle">Un registro de cada ataque documentado en establecimientos educacionales del país. Desde 1966 hasta hoy.</p>
+    <div class="scroll-hint">Desplaza hacia abajo</div>
+  </section>
+
+  <div class="timeline" id="timeline"></div>
+
+  <section class="closing" id="closing">
+    <p>Esta lista sigue creciendo.</p>
+    <div class="total" id="totalCount"></div>
+    <div class="total source-note" style="margin-top: 1.5rem; max-width: 400px; text-align: center; line-height: 1.7;">
+      Cada entrada corresponde a un ataque documentado en un establecimiento educacional de Chile.
+    </div>
+  </section>
+
+  <footer style="padding: 2rem; text-align: center;">
+    <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--text-faint);">
+      Fuente: Registro público de incidentes de violencia escolar en Chile
+    </p>
+  </footer>
+
+  <script>
+    const events = [
+      { date: '1966-12-06', location: 'Los Ángeles, Biobío', description: 'Un exalumno de 16 años y su cómplice asesinaron a dos profesoras por venganza. Una de ellas lo había humillado leyendo una carta personal frente a su clase.', dead: 2, injured: 0 },
+      { date: '1975-10-08', location: 'Angol, Araucanía', description: 'Una cocinera escolar envenenó la leche y el cereal de los alumnos con arsénico, por un conflicto personal. Tres niños murieron y cuarenta resultaron intoxicados.', dead: 3, injured: 40 },
+      { date: '1999-12-17', location: 'Valparaíso', description: 'Un profesor de física recién despedido mató a tres personas en dos liceos distintos, incluyendo a su propia hija de tres años.', dead: 3, injured: 1 },
+      { date: '2004-09-27', location: 'Santa Juana, Biobío', description: 'Un estudiante de 17 años emboscó a un compañero en un baño del liceo y lo mató con una escopeta, como venganza por un conflicto amoroso.', dead: 1, injured: 0 },
+      { date: '2005-08-09', location: 'Temuco, Araucanía', description: 'Un alumno de 14 años apuñaló a su profesor en el cuello. Declaró que estaba bajo posesión satánica.', dead: 0, injured: 1 },
+      { date: '2015-12-08', location: 'Lebu, Biobío', description: 'Un estudiante apuñaló a otro al menos cuatro veces durante una pelea dentro del colegio.', dead: 0, injured: 1 },
+      { date: '2016-08-26', location: 'Calama, Antofagasta', description: 'Una pelea entre estudiantes terminó con uno de ellos apuñalado y trasladado de emergencia al hospital.', dead: 0, injured: 1 },
+      { date: '2019-03-16', location: 'Iquique, Tarapacá', description: 'Un cadete de 18 años disparó y mató a un cabo y un oficial superior en una escuela militar, antes de quitarse la vida.', dead: 3, injured: 0 },
+      { date: '2019-05-27', location: 'Puerto Montt, Los Lagos', description: 'Un alumno de 14 años disparó tres veces con un revólver robado, hiriendo a un compañero. Dejó una nota donde declaraba haberse inspirado en la masacre de Columbine.', dead: 0, injured: 1 },
+      { date: '2022-08-23', location: 'Valdivia, Los Ríos', description: 'Una estudiante fue apuñalada por otra joven durante una pelea en el liceo.', dead: 0, injured: 1 },
+      { date: '2023-04-18', location: 'Curicó, Maule', description: 'Un alumno de 15 años fue atacado con un cuchillo y manoplas por cuatro compañeros que lo acosaban sistemáticamente.', dead: 0, injured: 1 },
+      { date: '2023-05-31', location: 'Pudahuel, Metropolitana', description: 'Un alumno de 14 años disparó un arma de fuego dentro de la sala de clases. En su mochila se encontró otra arma y drogas.', dead: 0, injured: 1 },
+      { date: '2024-04-23', location: 'Copiapó, Atacama', description: 'Un estudiante fue apuñalado en el cuello con un lápiz durante el almuerzo, tras una discusión con un compañero.', dead: 0, injured: 1 },
+      { date: '2024-05-09', location: 'Lota, Biobío', description: 'Un estudiante fue apuñalado dentro del recinto escolar.', dead: 0, injured: 1 },
+      { date: '2024-05-22', location: 'Temuco, Araucanía', description: 'Un alumno de 17 años fue atacado por al menos dos compañeros, recibiendo una herida en la espalda.', dead: 0, injured: 1 },
+      { date: '2024-07-27', location: 'Arica, Arica y Parinacota', description: 'Durante una pelea grupal entre estudiantes, uno sacó un arma blanca y apuñaló a otro. Fue detenido y acusado de homicidio frustrado.', dead: 0, injured: 1 },
+      { date: '2024-08-20', location: 'Antofagasta', description: 'Un estudiante fue apuñalado por un compañero durante una pelea en la universidad.', dead: 0, injured: 1 },
+      { date: '2024-09-05', location: 'Puente Alto, Metropolitana', description: 'La madre de un estudiante apuñaló a un funcionario del colegio. Luego, su hijo atropelló a dos personas.', dead: 0, injured: 2 },
+      { date: '2024-10-23', location: 'Quinta Normal, Metropolitana', description: 'Una bomba molotov casera explotó dentro de un internado, hiriendo a 34 estudiantes y un profesor. El autor nunca fue identificado.', dead: 0, injured: 35 },
+      { date: '2025-03-21', location: 'Angol, Araucanía', description: 'Un estudiante fue apuñalado ocho veces en una escalera del liceo al inicio del recreo.', dead: 0, injured: 1 },
+      { date: '2025-04-14', location: 'Curicó, Maule', description: 'Un alumno de sexto básico fue cortado en la mejilla con la hoja de un sacapuntas. Necesitó cinco puntos de sutura.', dead: 0, injured: 1 },
+      { date: '2025-04-14', location: 'San Ignacio, Ñuble', description: 'Un estudiante resultó herido durante una pelea con cuchillos dentro del liceo.', dead: 0, injured: 1 },
+      { date: '2025-04-15', location: 'Chillán, Ñuble', description: 'Un estudiante se acercó al liceo cerca de las 10 de la noche y atacó a dos alumnos con un arma blanca.', dead: 0, injured: 2 },
+      { date: '2025-05-29', location: 'San Pedro de la Paz, Biobío', description: 'Un alumno de 16 años disparó a un estudiante como represalia por una pelea anterior. Cómplices armados lo esperaban en la entrada del colegio.', dead: 0, injured: 3 },
+      { date: '2025-06-03', location: 'Estación Central, Metropolitana', description: 'Un estudiante fue apuñalado por un compañero de 15 años durante una pelea en el liceo.', dead: 0, injured: 1 },
+      { date: '2025-06-17', location: 'Alhué, Metropolitana', description: 'Un alumno de 15 años apuñaló a un compañero sin provocación alguna mientras este desayunaba.', dead: 0, injured: 1 },
+      { date: '2025-08-07', location: 'San Bernardo, Metropolitana', description: 'Un alumno de octavo básico ingresó al colegio con dos bombas molotov y un overol blanco. Al fallar el artefacto, golpeó brutalmente a una bibliotecaria.', dead: 0, injured: 1 },
+      { date: '2025-09-12', location: 'Santiago, Metropolitana', description: 'Una persona apuñaló a dos estudiantes durante una fiesta en una universidad.', dead: 0, injured: 2 },
+      { date: '2025-10-13', location: 'Curicó, Maule', description: 'Un alumno de 14 años apuñaló a un compañero sin provocación y luego golpeó a un profesor que intentó detenerlo.', dead: 0, injured: 2 },
+      { date: '2025-11-26', location: 'Valparaíso', description: 'Un estudiante universitario de 24 años apuñaló a su profesor después de reprobar un examen.', dead: 0, injured: 1 },
+      { date: '2026-03-27', location: 'Calama, Antofagasta', description: 'Un alumno de 18 años apuñaló a dos funcionarios y tres estudiantes, matando a un inspector de 49 años. Intentó suicidarse tras ser reducido.', dead: 1, injured: 5 },
+    ];
+
+    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
+    }
+
+    function daysBetween(a, b) {
+      const da = new Date(a + 'T12:00:00');
+      const db = new Date(b + 'T12:00:00');
+      return Math.round((db - da) / (1000 * 60 * 60 * 24));
+    }
+
+    function getYear(dateStr) {
+      return parseInt(dateStr.substring(0, 4));
+    }
+
+    // Build timeline
+    const timeline = document.getElementById('timeline');
+    const minGap = 24;   // px — tight packing for recent events
+    const maxGap = 700;  // px — vast emptiness for early years
+    const factor = 0.3;  // px per day
+
+    let lastDecade = null;
+
+    function addDecadeMarker(decade, year, gapBefore) {
+      const marker = document.createElement('div');
+      marker.className = 'decade-marker';
+      marker.style.marginTop = `${Math.max(gapBefore, 30)}px`;
+      marker.style.marginBottom = '20px';
+      marker.textContent = `${decade}s`;
+      marker.dataset.year = year;
+      timeline.appendChild(marker);
+    }
+
+    events.forEach((ev, i) => {
+      const year = getYear(ev.date);
+      const decade = Math.floor(year / 10) * 10;
+
+      // Spacing
+      let gap = 60;
+      if (i > 0) {
+        const days = daysBetween(events[i - 1].date, ev.date);
+        gap = Math.max(minGap, Math.min(maxGap, days * factor));
+      }
+
+      // Insert decade marker on decade change
+      if (decade !== lastDecade) {
+        addDecadeMarker(decade, year, i === 0 ? 60 : gap * 0.5);
+        gap = Math.min(gap, 40); // card follows close after its marker
+      }
+
+      ev._marginTop = gap;
+      lastDecade = decade;
+
+      // Create event element
+      const el = document.createElement('div');
+      el.className = 'event' + (ev.dead > 0 ? ' has-deaths' : '');
+      el.style.marginTop = `${ev._marginTop}px`;
+      el.dataset.year = year;
+      el.dataset.month = new Date(ev.date + 'T12:00:00').getMonth();
+
+      let tollHTML = '';
+      const parts = [];
+      if (ev.dead > 0) parts.push(`<span class="dead">${ev.dead} ${ev.dead === 1 ? 'muerto' : 'muertos'}</span>`);
+      if (ev.injured > 0) parts.push(`${ev.injured} ${ev.injured === 1 ? 'herido' : 'heridos'}`);
+      if (parts.length) tollHTML = `<div class="event-toll">${parts.join(' · ')}</div>`;
+
+      el.innerHTML = `
+        <div class="event-date">${formatDate(ev.date)}</div>
+        <div class="event-location">${ev.location}</div>
+        <div class="event-description">${ev.description}</div>
+        ${tollHTML}
+      `;
+
+      timeline.appendChild(el);
+    });
+
+    // Totals
+    const totalDead = events.reduce((s, e) => s + e.dead, 0);
+    const totalInjured = events.reduce((s, e) => s + e.injured, 0);
+    document.getElementById('totalCount').textContent =
+      `${events.length} incidentes documentados · ${totalDead} muertos · ${totalInjured} heridos`;
+
+    // Intersection Observer for reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.event, .decade-marker, .closing p, .closing .total, .closing .source-note').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Year indicator + days counter
+    const yearEl = document.getElementById('yearIndicator');
+    const daysCounterEl = document.getElementById('daysCounter');
+    const dcNumberEl = document.getElementById('dcNumber');
+    const dcLabelEl = document.getElementById('dcLabel');
+    const heroEl = document.querySelector('.hero');
+    const closingEl = document.getElementById('closing');
+    const monthsFull = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+    // Progressive atmosphere
+    const vignetteEl = document.getElementById('vignette');
+    const totalEvents = events.length;
+
+    // Pre-compute days between consecutive events
+    const daysBetweenEvents = events.map((ev, i) => {
+      if (i === 0) return null;
+      return daysBetween(events[i - 1].date, ev.date);
+    });
+
+    // Days counter animation state
+    let counterTarget = null;
+    let counterDisplay = null;
+    let counterAnimFrame = null;
+    let counterSpeed = 1; // multiplier: increases with scroll progress
+    let counterTrembleAmt = 0;
+
+    function animateCounter() {
+      if (counterTarget === null) {
+        counterAnimFrame = requestAnimationFrame(animateCounter);
+        return;
+      }
+
+      if (counterDisplay === null) counterDisplay = counterTarget;
+
+      // Approach target: faster when counterSpeed is high
+      const diff = counterTarget - counterDisplay;
+      const step = Math.max(0.3, Math.abs(diff) * 0.08 * counterSpeed);
+
+      if (Math.abs(diff) < 0.5) {
+        counterDisplay = counterTarget;
+      } else {
+        counterDisplay += Math.sign(diff) * step;
+      }
+
+      const displayNum = Math.round(counterDisplay);
+
+      // Trembling: translate offset that grows with progress
+      const tx = (Math.random() - 0.5) * counterTrembleAmt;
+      const ty = (Math.random() - 0.5) * counterTrembleAmt;
+      dcNumberEl.style.transform = `translate(${tx}px, ${ty}px)`;
+      dcNumberEl.textContent = displayNum.toLocaleString('es-CL');
+
+      counterAnimFrame = requestAnimationFrame(animateCounter);
+    }
+    animateCounter();
+
+    function updateScroll() {
+      const heroRect = heroEl.getBoundingClientRect();
+      const closingRect = closingEl.getBoundingClientRect();
+      const inTimeline = heroRect.bottom < 0 && closingRect.top > window.innerHeight * 0.5;
+
+      if (!inTimeline) {
+        yearEl.classList.remove('visible');
+        daysCounterEl.classList.remove('visible');
+        vignetteEl.style.opacity = '0';
+        document.body.style.backgroundColor = '';
+        document.documentElement.style.backgroundColor = '';
+        counterTarget = null;
+        counterDisplay = null;
+        return;
+      }
+
+      yearEl.classList.add('visible');
+      daysCounterEl.classList.add('visible');
+
+      // Find the last event scrolled past
+      const allEvents = document.querySelectorAll('.event');
+      let currentYear = '';
+      let currentMonth = '';
+      let eventIndex = 0;
+      const threshold = window.innerHeight * 0.35;
+
+      allEvents.forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < threshold) {
+          currentYear = el.dataset.year;
+          currentMonth = el.dataset.month;
+          eventIndex = idx;
+        }
+      });
+
+      // Progress: 0 at start → 1 at end
+      const progress = eventIndex / Math.max(totalEvents - 1, 1);
+      const eased = progress * progress;
+
+      // Year + month indicator (same line, same font)
+      if (currentYear) {
+        const m = monthsFull[parseInt(currentMonth)] || '';
+        yearEl.textContent = `${m} ${currentYear}`;
+        const ir = Math.round(62 + eased * 60);
+        const ig = Math.round(59 - eased * 20);
+        const ib = Math.round(55 - eased * 20);
+        yearEl.style.color = `rgb(${ir},${ig},${ib})`;
+      }
+
+      // Days counter: days until NEXT incident
+      if (eventIndex < totalEvents - 1 && daysBetweenEvents[eventIndex + 1] !== null) {
+        counterTarget = daysBetweenEvents[eventIndex + 1];
+        dcLabelEl.textContent = 'días hasta el siguiente ataque';
+      } else {
+        // Last event: days since last incident until today
+        const lastDate = new Date(events[events.length - 1].date + 'T12:00:00');
+        const today = new Date();
+        counterTarget = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
+        dcLabelEl.textContent = 'días desde el último ataque';
+      }
+
+      // Speed and trembling scale with progress
+      counterSpeed = 1 + eased * 8;
+      counterTrembleAmt = eased * 4; // 0px at start → 4px at end
+
+      // Tint the counter red too
+      const cr = Math.round(62 + eased * 80);
+      const cg = Math.round(59 - eased * 25);
+      const cb = Math.round(55 - eased * 25);
+      dcNumberEl.style.color = `rgb(${cr},${cg},${cb})`;
+
+      // Background: from #0B0B0B to dark blood-tinted black
+      const r = Math.round(11 + eased * 18);
+      const g = Math.round(11 - eased * 5);
+      const b = Math.round(11 - eased * 6);
+      document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
+      document.documentElement.style.backgroundColor = `rgb(${r},${g},${b})`;
+
+      // Vignette intensifies
+      vignetteEl.style.opacity = `${eased * 0.7}`;
+    }
+
+    window.addEventListener('scroll', updateScroll, { passive: true });
+  </script>
+</body>
+</html>
