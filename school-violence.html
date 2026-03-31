@@ -3,7 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Violencia Escolar en Chile</title>
+  <title>Violencia Escolar en Chile — Registro de ataques en establecimientos educacionales</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Un registro cronológico de cada ataque documentado en establecimientos educacionales de Chile, desde 1966 hasta hoy. Apuñalamientos, tiroteos y otros incidentes de violencia escolar.">
+  <meta name="keywords" content="violencia escolar, Chile, ataques escolares, tiroteos escolares, apuñalamientos, seguridad escolar, establecimientos educacionales, cronología">
+  <meta name="author" content="Max Morel">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="es">
+  <link rel="canonical" href="https://pisanvs.cl/school-violence">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:title" content="Violencia Escolar en Chile">
+  <meta property="og:description" content="Un registro de cada ataque documentado en establecimientos educacionales del país. Desde 1966 hasta hoy. Esta lista sigue creciendo.">
+  <meta property="og:site_name" content="Violencia Escolar en Chile">
+  <meta property="og:url" content="https://pisanvs.cl/school-violence">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Violencia Escolar en Chile">
+  <meta name="twitter:description" content="Un registro de cada ataque documentado en establecimientos educacionales del país. Desde 1966 hasta hoy.">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#0B0B0B">
+  <meta name="color-scheme" content="dark">
+  <meta name="msapplication-TileColor" content="#0B0B0B">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
   <style>
@@ -341,6 +367,41 @@
       opacity: 1;
     }
 
+    /* ─── FOOTER ─── */
+    .site-footer {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+      text-align: left;
+      border-top: 1px solid var(--line);
+    }
+
+    .site-footer .disclaimer p {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.85rem;
+      color: var(--text-faint);
+      line-height: 1.7;
+      margin-bottom: 0.4rem;
+    }
+
+    .site-footer a {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--text-faint);
+      padding-bottom: 1px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .site-footer a:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
     /* ─── DENSITY LABEL ─── */
     .density-note {
       position: relative;
@@ -404,10 +465,13 @@
     </div>
   </section>
 
-  <footer style="padding: 2rem; text-align: center;">
-    <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--text-faint);">
-      Fuente: Registro público de incidentes de violencia escolar en Chile
-    </p>
+  <footer class="site-footer">
+    <div class="disclaimer">
+      <p>Esta lista incluye apuñalamientos, tiroteos y otros ataques ocurridos en jardines infantiles, escuelas, universidades y otros centros educacionales de Chile. Se excluyen:</p>
+      <p>1. Incidentes ocurridos como resultado de acciones policiales o militares (como la matanza de la Escuela Santa María).</p>
+      <p>2. Suicidios o intentos de suicidio que involucren a una sola persona.</p>
+    </div>
+    <a href="https://en.wikipedia.org/wiki/List_of_school_attacks_in_Chile" target="_blank" rel="noopener">Fuente: Wikipedia — List of school attacks in Chile</a>
   </footer>
 
   <script>
