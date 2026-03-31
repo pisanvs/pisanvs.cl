@@ -445,7 +445,7 @@
   <div class="year-indicator" id="yearIndicator"></div>
   <div class="days-counter" id="daysCounter">
     <span class="dc-number" id="dcNumber">—</span>
-    <span class="dc-label" id="dcLabel">días hasta el siguiente ataque</span>
+    <span class="dc-label" id="dcLabel">días desde el último ataque</span>
   </div>
   <div class="vignette" id="vignette"></div>
 
@@ -459,6 +459,10 @@
 
   <section class="closing" id="closing">
     <p>Esta lista sigue creciendo.</p>
+    <div class="days-counter static-days-counter" id="staticDaysCounter" style="position:static;display:flex;align-items:center;justify-content:center;opacity:1;padding-bottom:1.7rem;">
+      <span class="dc-number" id="staticDcNumber">—</span>
+      <span class="dc-label" style="margin-left:0.7em;">días desde el último ataque</span>
+    </div>
     <div class="total" id="totalCount"></div>
     <div class="total source-note" style="margin-top: 1.5rem; max-width: 400px; text-align: center; line-height: 1.7;">
       Cada entrada corresponde a un ataque documentado en un establecimiento educacional de Chile.
@@ -714,7 +718,7 @@
       // Days counter: days until NEXT incident
       if (eventIndex < totalEvents - 1 && daysBetweenEvents[eventIndex + 1] !== null) {
         counterTarget = daysBetweenEvents[eventIndex + 1];
-        dcLabelEl.textContent = 'días hasta el siguiente ataque';
+        dcLabelEl.textContent = 'días desde el último incidente';
       } else {
         // Last event: days since last incident until today
         const lastDate = new Date(events[events.length - 1].date + 'T12:00:00');
@@ -745,6 +749,16 @@
     }
 
     window.addEventListener('scroll', updateScroll, { passive: true });
+
+    (function() {
+      const staticNumber = document.getElementById('staticDcNumber');
+      if (staticNumber && events.length > 0) {
+        const lastDate = new Date(events[events.length - 1].date + 'T12:00:00');
+        const today = new Date();
+        const days = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
+        staticNumber.textContent = days.toLocaleString('es-CL');
+      }
+    })();
   </script>
 </body>
 </html>
