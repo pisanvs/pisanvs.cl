@@ -297,12 +297,14 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
     const data = await res.json();
 
     if (data.track) {
-      const { artist, name, nowplaying } = data.track;
-      const trackStr = `${nowplaying ? '▶' : '↺'} ${escHtml(artist)} — ${escHtml(name)}`;
-      nowData.track = trackStr;
+      const { artist, name, nowplaying, url, timestamp } = data.track;
+      const label = `${nowplaying ? '▶' : '↺'} ${escHtml(artist)} — ${escHtml(name)}`;
+      const suffix = (!nowplaying && timestamp) ? ` · ${timeAgo(timestamp)}` : '';
+      const cls = nowplaying ? 'track-now' : 'track-past';
+      nowData.track = label + suffix;
       renderNow();
       const trackEl = document.getElementById('status-track');
-      if (trackEl) trackEl.textContent = `${nowplaying ? '▶' : '↺'} ${artist} — ${name}`;
+      if (trackEl) trackEl.innerHTML = `<a href="${escHtml(url)}" target="_blank" rel="noopener"><span class="${cls}">${label}${escHtml(suffix)}</span></a>`;
     }
 
     if (data.post) {

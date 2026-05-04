@@ -62,6 +62,10 @@
     }
     #status-line1 { display: flex; align-items: center; gap: 4px; }
     #status .dot { color: var(--green); animation: blink 2s infinite; }
+    #status-track a { text-decoration: none; }
+    #status-track a:hover { text-decoration: underline; }
+    #status-track .track-now  { color: var(--green); animation: blink 2s infinite; }
+    #status-track .track-past { color: var(--muted); }
     @keyframes blink { 50% { opacity: 0.3; } }
 
     #bios {

@@ -14,7 +14,7 @@
  */
 
 const CACHE_TTL   = 300; // seconds
-const CACHE_KEY   = 'https://pisanvs-live/v2';
+const CACHE_KEY   = 'https://pisanvs-live/v4';
 const LASTFM_USER = 'maxmorelpisano';
 const DISCOGS_USER = 'pisanvs';
 const NOTION_DB   = '9a9a392ec4be4a47bbc2de013f744d36';
@@ -32,11 +32,13 @@ async function fetchLastFm(key) {
   const d = await r.json();
   const t = d.recenttracks?.track?.[0];
   if (!t) return null;
+  const nowplaying = t['@attr']?.nowplaying === 'true';
   return {
     name:       t.name,
     artist:     t.artist['#text'],
     url:        t.url,
-    nowplaying: t['@attr']?.nowplaying === 'true',
+    nowplaying,
+    timestamp:  nowplaying ? null : (t.date?.uts ? parseInt(t.date.uts) * 1000 : null),
   };
 }
 
