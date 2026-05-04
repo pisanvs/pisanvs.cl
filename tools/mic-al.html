@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mic Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0f;
+    --bg2: #181819;
+    --bg3: #212123;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8e8e6;
+    --text2: #9a9a96;
+    --text3: #5a5a56;
+    --blue: #4a9eff;
+    --blue-dim: rgba(74,158,255,0.15);
+    --amber: #f5a623;
+    --green: #34d399;
+    --red: #f87171;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  header {
+    width: 100%;
+    max-width: 720px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  header span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .tabs {
+    display: flex;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    width: fit-content;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab {
+    padding: 9px 22px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    transition: all .15s;
+  }
+
+  .tab.active {
+    background: var(--bg3);
+    color: var(--text);
+  }
+
+  .tab:not(:last-child) {
+    border-right: 0.5px solid var(--border2);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .btn:hover { background: var(--bg3); }
+  .btn:active { transform: scale(0.97); }
+  .btn.active { background: var(--bg3); border-color: rgba(255,255,255,0.25); }
+  .btn.rec { border-color: rgba(248,113,113,0.5); color: var(--red); }
+  .btn.rec.active { background: rgba(248,113,113,0.08); }
+  .btn.go { border-color: rgba(52,211,153,0.5); color: var(--green); }
+  .btn.go.active { background: rgba(52,211,153,0.08); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    background: var(--bg3);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .freq-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .fstat {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+
+  .fstat .label {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 5px;
+  }
+
+  .fstat .val {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .row label {
+    font-size: 13px;
+    color: var(--text2);
+    white-space: nowrap;
+    min-width: 60px;
+  }
+
+  .row input[type=range] {
+    flex: 1;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .row span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .noise-type {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  .noise-type .label {
+    font-size: 12px;
+    color: var(--text3);
+    margin-right: 4px;
+  }
+
+  .nt-btn {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-family: 'Syne', sans-serif;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .nt-btn:hover { background: var(--bg3); }
+  .nt-btn.active { background: var(--bg3); color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+  .polar-data {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 2;
+    word-break: break-all;
+  }
+
+  .error {
+    padding: 12px 16px;
+    border: 0.5px solid rgba(248,113,113,0.4);
+    border-radius: var(--radius);
+    color: var(--red);
+    font-size: 13px;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 500px) {
+    .freq-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mic Analyzer</h1>
+  <span>frequency response + polar pattern</span>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('freq')">Frequency response</button>
+    <button class="tab" onclick="switchTab('polar')">Polar pattern</button>
+  </div>
+
+  <!-- FREQUENCY TAB -->
+  <div id="panel-freq" class="panel active">
+    <p class="hint">Plays a 20Hz → 20kHz sine sweep through your speakers while the mic records. Shows live spectrum (blue) and peak hold (fill).</p>
+    <div class="controls">
+      <button class="btn rec" id="btn-start-freq" onclick="startFreq()">Start mic</button>
+      <button class="btn" id="btn-sweep" onclick="toggleSweep()" disabled>▶ Play sweep</button>
+      <button class="btn" onclick="clearFreq()">Clear</button>
+      <span class="stat" id="stat-freq">–</span>
+    </div>
+    <canvas id="freqCanvas" width="700" height="280" role="img" aria-label="Frequency response graph from microphone"></canvas>
+    <div class="freq-stats">
+      <div class="fstat"><div class="label">Peak freq</div><div class="val" id="peak-freq">–</div></div>
+      <div class="fstat"><div class="label">Peak level</div><div class="val" id="peak-level">–</div></div>
+      <div class="fstat"><div class="label">−3dB low</div><div class="val" id="f-low">–</div></div>
+      <div class="fstat"><div class="label">−3dB high</div><div class="val" id="f-high">–</div></div>
+    </div>
+  </div>
+
+  <!-- POLAR TAB -->
+  <div id="panel-polar" class="panel">
+    <p class="hint">Plays a reference noise through your speakers. Rotate your mic (or move the source) in 15° steps and snap each angle to build the polar pattern.</p>
+
+    <div class="noise-type">
+      <span class="label">Source:</span>
+      <button class="nt-btn active" id="nt-white" onclick="setNoiseType('white')">White noise</button>
+      <button class="nt-btn" id="nt-pink" onclick="setNoiseType('pink')">Pink noise</button>
+      <button class="nt-btn" id="nt-1k" onclick="setNoiseType('1k')">1kHz tone</button>
+    </div>
+
+    <div class="row">
+      <label>Volume</label>
+      <input type="range" min="0" max="100" value="60" step="1" id="vol-slider" oninput="setVolume(this.value)">
+      <span id="vol-val">60%</span>
+    </div>
+
+    <div class="controls">
+      <button class="btn rec" id="btn-start-polar" onclick="startPolar()">Start mic</button>
+      <button class="btn go" id="btn-noise" onclick="toggleNoise()" disabled>▶ Play noise</button>
+      <button class="btn" id="btn-snap" onclick="takeSnap()" disabled>Snap angle</button>
+      <button class="btn" onclick="clearPolar()">Clear all</button>
+      <span class="stat" id="stat-polar">–</span>
+    </div>
+
+    <div class="row">
+      <label>Angle</label>
+      <input type="range" min="0" max="345" step="15" value="0" id="angle-slider" oninput="updateAngle(this.value)">
+      <span id="angle-val">0°</span>
+    </div>
+
+    <canvas id="polarCanvas" width="700" height="400" role="img" aria-label="Polar pattern diagram showing microphone directional sensitivity"></canvas>
+    <div class="polar-data" id="polar-data">No measurements yet — snap angles to build the pattern.</div>
+  </div>
+</div>
+
+<script>
+let audioCtx = null, analyserNode = null, micStream = null;
+let freqAnimId = null, polarAnimId = null;
+let freqRunning = false, polarRunning = false;
+let freqSmooth = null;
+let polarMeasures = {};
+let currentAngle = 0;
+let sweepOsc = null, sweepOn = false;
+let noiseNode = null, noiseGain = null, noiseOn = false;
+let noiseType = 'white';
+let volume = 0.6;
+let pinkBuf = null;
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((b, i) => b.classList.toggle('active', ['freq','polar'][i] === t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + t).classList.add('active');
+}
+
+function showError(msg) {
+  document.querySelectorAll('.error').forEach(e => e.remove());
+  ['panel-freq','panel-polar'].forEach(id => {
+    const d = document.createElement('div');
+    d.className = 'error';
+    d.textContent = msg;
+    document.getElementById(id).prepend(d);
+  });
+}
+
+async function initAudio() {
+  if (audioCtx) return true;
+  try {
+    // Get mic stream first so we can match its sample rate
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+    });
+
+    // Create AudioContext with NO forced sample rate — browser picks the right one
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const src = audioCtx.createMediaStreamSource(micStream);
+    analyserNode = audioCtx.createAnalyser();
+    analyserNode.fftSize = 4096;
+    analyserNode.smoothingTimeConstant = 0.6;
+    src.connect(analyserNode);
+
+    noiseGain = audioCtx.createGain();
+    noiseGain.gain.value = volume;
+    noiseGain.connect(audioCtx.destination);
+
+    buildPinkBuf();
+    return true;
+  } catch (e) {
+    const msg = e.name === 'NotAllowedError'
+      ? 'Microphone access denied. Allow mic access in your browser and reload.'
+      : 'Could not access microphone: ' + e.message;
+    showError(msg);
+    audioCtx = null;
+    return false;
+  }
+}
+
+function buildPinkBuf() {
+  const len = audioCtx.sampleRate * 4;
+  pinkBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const d = pinkBuf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for (let i = 0; i < len; i++) {
+    const w = Math.random() * 2 - 1;
+    b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
+    b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
+    b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+    d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;
+    b6 = w * 0.115926;
+  }
+}
+
+function makeNoise() {
+  stopNoise();
+  if (noiseType === 'white') {
+    // Use AudioWorklet if available, else ScriptProcessor
+    const bufSz = 4096;
+    const proc = audioCtx.createScriptProcessor(bufSz, 1, 1);
+    proc.onaudioprocess = e => {
+      const o = e.outputBuffer.getChannelData(0);
+      for (let i = 0; i < o.length; i++) o[i] = Math.random() * 2 - 1;
+    };
+    proc.connect(noiseGain);
+    noiseNode = proc;
+  } else if (noiseType === 'pink') {
+    const src = audioCtx.createBufferSource();
+    src.buffer = pinkBuf;
+    src.loop = true;
+    src.connect(noiseGain);
+    src.start();
+    noiseNode = src;
+  } else {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 1000;
+    osc.connect(noiseGain);
+    osc.start();
+    noiseNode = osc;
+  }
+}
+
+function stopNoise() {
+  if (noiseNode) {
+    try { noiseNode.disconnect(); } catch(e) {}
+    try { noiseNode.stop(); } catch(e) {}
+    noiseNode = null;
+  }
+}
+
+function setNoiseType(t) {
+  noiseType = t;
+  ['white','pink','1k'].forEach(k => document.getElementById('nt-'+k).classList.toggle('active', k === t));
+  if (noiseOn) makeNoise();
+}
+
+function setVolume(v) {
+  volume = v / 100;
+  document.getElementById('vol-val').textContent = v + '%';
+  if (noiseGain) noiseGain.gain.value = volume;
+}
+
+function toggleNoise() {
+  if (!noiseOn) {
+    makeNoise(); noiseOn = true;
+    document.getElementById('btn-noise').textContent = '■ Stop noise';
+    document.getElementById('btn-noise').classList.add('active');
+  } else {
+    stopNoise(); noiseOn = false;
+    document.getElementById('btn-noise').textContent = '▶ Play noise';
+    document.getElementById('btn-noise').classList.remove('active');
+  }
+}
+
+// ─── FREQUENCY TAB ───────────────────────────────────────────
+
+async function startFreq() {
+  if (freqRunning) { stopFreq(); return; }
+  const ok = await initAudio(); if (!ok) return;
+  freqRunning = true;
+  freqSmooth = new Float32Array(analyserNode.frequencyBinCount).fill(-Infinity);
+  document.getElementById('btn-start-freq').textContent = 'Stop mic';
+  document.getElementById('btn-start-freq').classList.add('active');
+  document.getElementById('btn-sweep').disabled = false;
+  document.getElementById('stat-freq').textContent = 'live · ' + audioCtx.sampleRate + 'Hz';
+  drawFreq();
+}
+
+function stopFreq() {
+  freqRunning = false;
+  cancelAnimationFrame(freqAnimId);
+  document.getElementById('btn-start-freq').textContent = 'Start mic';
+  document.getElementById('btn-start-freq').classList.remove('active');
+  document.getElementById('btn-sweep').disabled = true;
+  document.getElementById('stat-freq').textContent = 'stopped';
+  if (sweepOn) stopSweep();
+}
+
+function clearFreq() {
+  if (freqSmooth) freqSmooth.fill(-Infinity);
+  ['peak-freq','peak-level','f-low','f-high'].forEach(id => document.getElementById(id).textContent = '–');
+}
+
+function toggleSweep() {
+  if (sweepOn) { stopSweep(); return; }
+  sweepOn = true;
+  document.getElementById('btn-sweep').textContent = '■ Stop sweep';
+  sweepOsc = audioCtx.createOscillator();
+  const g = audioCtx.createGain(); g.gain.value = 0.25;
+  sweepOsc.type = 'sine';
+  sweepOsc.frequency.setValueAtTime(20, audioCtx.currentTime);
+  sweepOsc.frequency.exponentialRampToValueAtTime(20000, audioCtx.currentTime + 10);
+  sweepOsc.connect(g); g.connect(audioCtx.destination); sweepOsc.start();
+  sweepOsc.onended = () => { sweepOn = false; document.getElementById('btn-sweep').textContent = '▶ Play sweep'; };
+  setTimeout(() => { if (sweepOn) stopSweep(); }, 10200);
+}
+
+function stopSweep() {
+  sweepOn = false;
+  document.getElementById('btn-sweep').textContent = '▶ Play sweep';
+  if (sweepOsc) { try { sweepOsc.stop(); } catch(e) {} sweepOsc = null; }
+}
+
+function drawFreq() {
+  if (!freqRunning) return;
+  const cv = document.getElementById('freqCanvas');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const buf = new Float32Array(analyserNode.frequencyBinCount);
+  analyserNode.getFloatFrequencyData(buf);
+  const nyq = audioCtx.sampleRate / 2;
+
+  for (let i = 0; i < buf.length; i++) if (buf[i] > freqSmooth[i]) freqSmooth[i] = buf[i];
+
+  ctx.clearRect(0, 0, W, H);
+  const pad = { l: 48, r: 14, t: 14, b: 34 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+  const dbMin = -100, dbMax = -10;
+
+  const logX = f => pad.l + (Math.log10(Math.max(f, 20)) - Math.log10(20)) / (Math.log10(nyq) - Math.log10(20)) * pw;
+  const dbY  = db => pad.t + (1 - (db - dbMin) / (dbMax - dbMin)) * ph;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 0.5;
+  [20,50,100,200,500,1000,2000,5000,10000,20000].forEach(f => {
+    if (f > nyq) return;
+    const x = logX(f);
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + ph); ctx.stroke();
+    ctx.fillStyle = '#5a5a56'; ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText(f >= 1000 ? f/1000 + 'k' : f, x, pad.t + ph + 20);
+  });
+  [-100,-80,-60,-40,-20,-10].forEach(db => {
+    const y = dbY(db);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + pw, y); ctx.stroke();
+    ctx.fillStyle = '#5a5a56'; ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+    ctx.fillText(db + 'dB', pad.l - 5, y + 3);
+  });
+
+  // Axis labels
+  ctx.fillStyle = '#9a9a96'; ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('Frequency (Hz)', pad.l + pw / 2, H - 4);
+
+  // Peak hold fill
+  ctx.fillStyle = 'rgba(74,158,255,0.12)';
+  ctx.beginPath(); let first = true;
+  for (let i = 1; i < buf.length; i++) {
+    const f = i / buf.length * nyq; if (f < 20 || f > 20000) continue;
+    const x = logX(f), y = dbY(Math.max(dbMin, Math.min(dbMax, freqSmooth[i])));
+    if (first) { ctx.moveTo(x, pad.t + ph); ctx.lineTo(x, y); first = false; }
+    else ctx.lineTo(x, y);
+  }
+  ctx.lineTo(logX(Math.min(20000, nyq)), pad.t + ph);
+  ctx.closePath(); ctx.fill();
+
+  // Live line
+  ctx.strokeStyle = '#4a9eff'; ctx.lineWidth = 1.5; ctx.beginPath(); first = true;
+  for (let i = 1; i < buf.length; i++) {
+    const f = i / buf.length * nyq; if (f < 20 || f > 20000) continue;
+    const x = logX(f), y = dbY(Math.max(dbMin, Math.min(dbMax, buf[i])));
+    if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Stats
+  let pkIdx = 0, pkVal = -Infinity;
+  for (let i = 1; i < buf.length; i++) if (freqSmooth[i] > pkVal) { pkVal = freqSmooth[i]; pkIdx = i; }
+  const pkF = pkIdx / buf.length * nyq;
+  document.getElementById('peak-freq').textContent = pkF >= 1000 ? (pkF/1000).toFixed(1) + 'kHz' : Math.round(pkF) + 'Hz';
+  document.getElementById('peak-level').textContent = Math.round(pkVal) + 'dB';
+  const pk3 = pkVal - 3; let fl = 20, fh = 20000;
+  for (let i = pkIdx; i > 0; i--) { if (freqSmooth[i] < pk3) { fl = i/buf.length*nyq; break; } }
+  for (let i = pkIdx; i < buf.length; i++) { if (freqSmooth[i] < pk3) { fh = i/buf.length*nyq; break; } }
+  document.getElementById('f-low').textContent = fl >= 1000 ? (fl/1000).toFixed(1)+'kHz' : Math.round(fl)+'Hz';
+  document.getElementById('f-high').textContent = fh >= 1000 ? (fh/1000).toFixed(1)+'kHz' : Math.round(fh)+'Hz';
+
+  freqAnimId = requestAnimationFrame(drawFreq);
+}
+
+// ─── POLAR TAB ───────────────────────────────────────────────
+
+async function startPolar() {
+  if (polarRunning) { stopPolar(); return; }
+  const ok = await initAudio(); if (!ok) return;
+  polarRunning = true;
+  document.getElementById('btn-start-polar').textContent = 'Stop mic';
+  document.getElementById('btn-start-polar').classList.add('active');
+  document.getElementById('btn-noise').disabled = false;
+  document.getElementById('btn-snap').disabled = false;
+  document.getElementById('stat-polar').textContent = 'ready · ' + audioCtx.sampleRate + 'Hz';
+  drawPolar();
+}
+
+function stopPolar() {
+  polarRunning = false;
+  cancelAnimationFrame(polarAnimId);
+  if (noiseOn) { stopNoise(); noiseOn = false; document.getElementById('btn-noise').textContent = '▶ Play noise'; document.getElementById('btn-noise').classList.remove('active'); }
+  document.getElementById('btn-start-polar').textContent = 'Start mic';
+  document.getElementById('btn-start-polar').classList.remove('active');
+  document.getElementById('btn-noise').disabled = true;
+  document.getElementById('btn-snap').disabled = true;
+  document.getElementById('stat-polar').textContent = 'stopped';
+}
+
+function updateAngle(v) {
+  currentAngle = parseInt(v);
+  document.getElementById('angle-val').textContent = v + '°';
+}
+
+function getRMS() {
+  const buf = new Float32Array(analyserNode.frequencyBinCount);
+  analyserNode.getFloatFrequencyData(buf);
+  let sum = 0, n = 0;
+  for (let i = 1; i < buf.length; i++) {
+    if (buf[i] > -120) { sum += Math.pow(10, buf[i] / 20); n++; }
+  }
+  return n > 0 ? 20 * Math.log10(sum / n) : -120;
+}
+
+function takeSnap() {
+  const db = getRMS();
+  polarMeasures[currentAngle] = db;
+  document.getElementById('stat-polar').textContent = currentAngle + '° → ' + Math.round(db) + 'dB';
+  updatePolarTable();
+  currentAngle = (currentAngle + 15) % 360;
+  document.getElementById('angle-slider').value = currentAngle;
+  document.getElementById('angle-val').textContent = currentAngle + '°';
+}
+
+function clearPolar() {
+  polarMeasures = {};
+  document.getElementById('polar-data').textContent = 'No measurements yet — snap angles to build the pattern.';
+}
+
+function drawPolar() {
+  if (!polarRunning) return;
+  const cv = document.getElementById('polarCanvas');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+  const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.40;
+
+  // Grid rings
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 0.5;
+  const ringLabels = ['0dB', '−10dB', '−20dB', '−30dB'];
+  [1, 0.75, 0.5, 0.25].forEach((r, ri) => {
+    ctx.beginPath(); ctx.arc(cx, cy, R * r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#5a5a56'; ctx.font = '9px JetBrains Mono, monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(ringLabels[ri], cx + R * r + 3, cy - 7);
+  });
+
+  // Spokes
+  [0,30,60,90,120,150,180,210,240,270,300,330].forEach(a => {
+    const rad = (a - 90) * Math.PI / 180;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R); ctx.stroke();
+    const lx = cx + Math.cos(rad) * (R + 18), ly = cy + Math.sin(rad) * (R + 18);
+    ctx.fillStyle = '#9a9a96'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(a + '°', lx, ly);
+  });
+
+  // Current angle indicator
+  const ca = (currentAngle - 90) * Math.PI / 180;
+  ctx.strokeStyle = 'rgba(245,166,35,0.5)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]);
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ca) * R, cy + Math.sin(ca) * R); ctx.stroke();
+  ctx.setLineDash([]);
+
+  const measured = Object.keys(polarMeasures).map(Number);
+  if (measured.length < 1) { polarAnimId = requestAnimationFrame(drawPolar); return; }
+
+  const vals = Object.values(polarMeasures);
+  const maxDb = Math.max(...vals);
+  const normR = db => Math.max(0, Math.min(1, (db - maxDb + 40) / 40)) * R;
+
+  function interp(a) {
+    if (polarMeasures[a] !== undefined) return polarMeasures[a];
+    if (measured.length === 1) return polarMeasures[measured[0]];
+    const sorted = measured.slice().sort((x, y) => x - y);
+    let lo = sorted[sorted.length - 1], hi = sorted[0];
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i] <= a) lo = sorted[i];
+      if (sorted[i] >= a) { hi = sorted[i]; break; }
+    }
+    if (lo === hi) return polarMeasures[lo];
+    const span = ((hi - lo) + 360) % 360 || 360;
+    const t = ((a - lo) + 360) % 360 / span;
+    return polarMeasures[lo] * (1 - t) + polarMeasures[hi] * t;
+  }
+
+  // Fill
+  ctx.fillStyle = 'rgba(74,158,255,0.12)'; ctx.beginPath();
+  for (let a = 0; a < 360; a++) {
+    const rad = (a - 90) * Math.PI / 180, r = normR(interp(a));
+    const x = cx + Math.cos(rad) * r, y = cy + Math.sin(rad) * r;
+    a === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath(); ctx.fill();
+
+  // Line
+  ctx.strokeStyle = '#4a9eff'; ctx.lineWidth = 2; ctx.beginPath();
+  for (let a = 0; a < 360; a++) {
+    const rad = (a - 90) * Math.PI / 180, r = normR(interp(a));
+    const x = cx + Math.cos(rad) * r, y = cy + Math.sin(rad) * r;
+    a === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath(); ctx.stroke();
+
+  // Dots
+  measured.forEach(a => {
+    const rad = (a - 90) * Math.PI / 180, r = normR(polarMeasures[a]);
+    ctx.fillStyle = '#4a9eff'; ctx.beginPath(); ctx.arc(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r, 4, 0, Math.PI * 2); ctx.fill();
+  });
+
+  polarAnimId = requestAnimationFrame(drawPolar);
+}
+
+function updatePolarTable() {
+  const sorted = Object.keys(polarMeasures).map(Number).sort((a, b) => a - b);
+  document.getElementById('polar-data').textContent =
+    sorted.map(a => `${String(a).padStart(3)}°: ${Math.round(polarMeasures[a])}dB`).join('   ');
+}
+</script>
+</body>
+</html>

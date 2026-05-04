@@ -1,191 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Official website for pisanvs. DJ, Producer, Programmer and streamer">
-    <meta name="keywords" content="pisanvs, DJ, music, drum and bass, Programming">
-    <meta name="author" content="pisanvs, maxmorel@pisanvs.cl">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="og:title" content="pisanvs official website">
-    <meta name="og:description" content="Official website for pisanvs. DJ, Producer, Programmer and streamer">
-    <meta name="og:type" content="website">
-    <meta name="og:url" content="pisanvs.cl">
-    <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="./styles/index.css">
-    <title>PISANVS</title>
-    <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push({
-            'gtm.start': new Date().getTime(), event: 'gtm.js'
-        }); var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-WZQJQTH');</script>
-    <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="pisanvs — max morel. kid in chile. building hard things.">
+  <meta name="keywords" content="pisanvs, max morel, DJ, music, programming, Chile">
+  <meta name="author" content="pisanvs, maxmorel@pisanvs.cl">
+  <meta property="og:title" content="pisanvs">
+  <meta property="og:description" content="kid in chile. building hard things.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pisanvs.cl">
+  <meta name="theme-color" content="#000000">
+  <title>pisanvs</title>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WZQJQTH');</script>
+  <!-- End Google Tag Manager -->
+  <style>
+    @font-face {
+      font-family: 'Roboto Mono';
+      src: url('./assets/fonts/RobotoMono-VariableFont_wght.ttf') format('truetype-variations');
+      font-weight: 100 900;
+      font-style: normal;
+    }
+    :root {
+      --green:      #0f0;
+      --green-dim:  #6c6;
+      --green-faint:rgba(0,255,0,.25);
+      --cyan:       #18BCBC;
+      --orange:     #E58D3C;
+      --bg:         #000;
+      --fg:         #d8d8d8;
+      --muted:      #888;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Roboto Mono', ui-monospace, monospace;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,255,0,0.025) 0 1px,
+        transparent 1px 3px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+    #crt-bg { position: fixed; inset: 0; z-index: 0; opacity: 0.12; pointer-events: none; }
+
+    #status {
+      position: fixed; top: 10px; right: 14px;
+      font-size: 11px; color: var(--green-dim);
+      z-index: 5; text-align: right; letter-spacing: 0.02em;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    }
+    #status-line1 { display: flex; align-items: center; gap: 4px; }
+    #status .dot { color: var(--green); animation: blink 2s infinite; }
+    @keyframes blink { 50% { opacity: 0.3; } }
+
+    #bios {
+      position: fixed; top: 10px; left: 14px;
+      font-size: 11px; color: var(--orange); font-weight: 700;
+      letter-spacing: 0.1em; z-index: 5;
+    }
+
+    main {
+      position: relative; z-index: 2;
+      max-width: 720px; margin: 0 auto;
+      padding: 80px 24px 200px;
+    }
+    .index-head {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 24px; align-items: start; margin-bottom: 1.6em;
+    }
+    .commit-graph {
+      color: var(--green); font-size: 9px; line-height: 1.05;
+      letter-spacing: 1px; white-space: pre; margin: 0 0 .6em; opacity: .85;
+      user-select: none;
+    }
+    .ascii-portrait {
+      color: var(--green-dim); font-size: 7px; line-height: 1;
+      white-space: pre; margin: 0; opacity: .75; user-select: none;
+    }
+    @media (max-width: 600px) {
+      .index-head { grid-template-columns: 1fr; }
+      .ascii-portrait { font-size: 6px; }
+    }
+
+    .block { margin-bottom: 1.6em; }
+    .block h1 { color: var(--orange); margin-bottom: 0.4em; font-weight: 500; font-size: inherit; }
+    .block h2 { color: var(--green); margin-bottom: 0.4em; margin-top: 0.6em; font-weight: 500; font-size: inherit; }
+    .block p  { color: var(--fg); }
+    .block ul { list-style: none; }
+    .block li { color: var(--fg); }
+
+    a, button.inline {
+      color: var(--cyan); background: none; border: 0; padding: 0;
+      font: inherit; cursor: pointer; text-decoration: underline;
+      text-decoration-color: rgba(24,188,188,.35);
+      text-underline-offset: 2px;
+    }
+    a:hover, button.inline:hover {
+      color: #5fdede;
+      text-decoration-color: var(--cyan);
+    }
+
+    button.chip {
+      display: inline-block; background: transparent;
+      border: 1px solid var(--green-faint); color: var(--green);
+      font: inherit; font-size: 13px; padding: 1px 8px; margin: 0 2px;
+      cursor: pointer; border-radius: 2px;
+    }
+    button.chip:hover { border-color: var(--green); background: rgba(0,255,0,.06); }
+    button.chip.cyan  { color: var(--cyan); border-color: rgba(24,188,188,.3); }
+    button.chip.cyan:hover { border-color: var(--cyan); background: rgba(24,188,188,.06); }
+
+    .echo { color: var(--muted); font-size: 13px; margin-top: 1.4em; margin-bottom: 0.4em; }
+    .echo .prompt { color: var(--green); }
+    .echo .prompt .path { color: var(--cyan); }
+    .echo .cmd { color: var(--fg); }
+
+    .out { white-space: pre-wrap; word-break: break-word; }
+    .out.faint  { color: var(--green-dim); }
+    .out.cyan   { color: var(--cyan); }
+    .out.orange { color: var(--orange); }
+    .out.err    { color: #f55; }
+
+    .pane { margin: 12px 0; border: 1px solid var(--green-faint); background: rgba(0,20,0,0.2); }
+    .pane-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 4px 10px; background: rgba(0,40,0,0.4);
+      font-size: 11px; color: var(--green-dim);
+    }
+    .pane-head button, .pane-head a.pane-btn {
+      background: transparent; border: 1px solid var(--green-faint);
+      color: var(--green-dim); font: inherit; padding: 0 6px; cursor: pointer;
+      text-decoration: none;
+    }
+    .pane-head button:hover, .pane-head a.pane-btn:hover { color: var(--green); border-color: var(--green); }
+    .pane iframe { display: block; width: 100%; height: 460px; border: 0; background: #fff; }
+
+    #promptbar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.92); border-top: 1px solid var(--green-faint);
+      padding: 10px 24px; z-index: 6;
+      display: flex; justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+    #promptbar form {
+      width: 100%; max-width: 720px;
+      display: flex; gap: 0.5em; align-items: baseline;
+    }
+    #promptbar .prompt { color: var(--green); font-size: 14px; white-space: nowrap; }
+    #promptbar .prompt .path { color: var(--cyan); }
+    #input {
+      background: transparent; border: 0; outline: 0;
+      color: var(--fg); font: inherit; flex: 1;
+    }
+    #promptbar .hint { font-size: 11px; color: var(--muted); margin-left: auto; }
+    #clear-btn { font: 11px/1 inherit; color: var(--muted); background: none; border: 1px solid var(--green-faint); padding: 2px 6px; cursor: pointer; border-radius: 2px; }
+    #clear-btn:hover { color: var(--green); border-color: var(--green); }
+
+    @media (max-width: 600px) {
+      #promptbar .hint { display: none; }
+      #status, #bios  { display: none; }
+      main { padding-top: 32px; }
+    }
+
+    .reveal { opacity: 0; animation: fadein 0.6s forwards; }
+    @keyframes fadein { to { opacity: 1; } }
+  </style>
 </head>
-
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZQJQTH" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZQJQTH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-    <!-- Unified Content -->
-    <div class="content-wrapper">
-        <div class="header">
-            <span class="title orange logo">PISANVS</span>
-            <span class="socials">
-                <a href="//www.instagram.com/pisanvs" target="_blank" rel="noopener noreferrer"><img
-                        src="./assets/icons/instagram.svg" alt="instagram logo icon" class="social-icon"></a>
-                <a href="//github.com/pisanvs" target="_blank" rel="noopener noreferrer"><img
-                        src="./assets/icons/github.svg" alt="github logo icon" class="social-icon"></a>
-                <a href="//linkedin.com/in/pisanvs" target="_blank" rel="noopener noreferrer"><img
-                        src="./assets/icons/linkedin.svg" alt="linkedin logo icon" class="social-icon"></a>
-            </span>
-        </div>
-        <div class="content-links">
-            <span class="content-link"><a class="cyan" href="/me.html">ME</a></span>
-            <span class="content-link"><a class="cyan" href="https://www.tedxlintacyouth.cl">TEDx</a></span>
-            <span class="content-link"><a class="cyan" href="https://pisanvs.substack.com/?utm_source=pisanvs.cl&utm_medium=web&utm_campaign=blog_link">BLOG</a></span>
-            <span class="content-link"><a class="cyan" href="//numotics.cl">NUMOTICS</a></span>
-            <span class="content-link"><a class="cyan" href="/dev.html">PROGRAMMING</a></span>
-        </div>
-    </div>
+  <noscript>
+<pre style="color:#0f0;padding:24px;font-family:monospace">
+# pisanvs — max morel
 
-    <style>
-        /* Common styles */
-        @font-face {
-            font-family: "Roboto";
-            font-style: normal;
-            font-weight: 300;
-            src: url("../assets/fonts/Roboto-Light.ttf") format("truetype");
-        }
+kid in chile. building hard things. dj, programmer, streamer.
 
-        @font-face {
-            font-family: "Roboto";
-            font-style: normal;
-            font-weight: 400;
-            src: url("../assets/fonts/Roboto-Regular.ttf") format("truetype");
-        }
+## projects
+- numotics        https://numotics.cl
+- tedxlintacyouth https://tedxlintacyouth.vercel.app
+- blog            https://pisanvs.substack.com
 
-        @font-face {
-            font-family: "Roboto";
-            font-style: normal;
-            font-weight: 500;
-            src: url("../assets/fonts/Roboto-Medium.ttf") format("truetype");
-        }
+## tools
+- chordid         /tools/chordid.html
+- mic-al          /tools/mic-al.html
 
-        @font-face {
-            font-family: "Roboto Mono";
-            font-style: normal;
-            src: url("../assets/fonts/RobotoMono-VariableFont_wght.ttf") format("truetype");
-        }
+## links
+- github          https://github.com/pisanvs
+- instagram       https://instagram.com/pisanvs
+- linkedin        https://linkedin.com/in/pisanvs
 
-        * {
-            color: #fff;
-            font-family: "Roboto", sans-serif;
-        }
+(enable javascript for the interactive version)
+</pre>
+  </noscript>
 
-        body {
-            background-color: #000000;
-        }
+  <div id="bios">PISANVS BIOS v2.0</div>
+  <div id="status">
+    <div id="status-line1"><span class="dot">●</span> online &nbsp; <span id="status-feed">–</span></div>
+    <div id="status-track" style="color:var(--muted)"></div>
+  </div>
 
-        a {
-            text-decoration: none;
-            padding: 0;
-        }
+  <canvas id="crt-bg"></canvas>
 
-        .title {
-            font-weight: 500;
-            font-size: 50px;
-            margin-right: 65px;
-        }
+  <main>
+    <div id="index"></div>
+    <div id="log"></div>
+  </main>
 
-        .social-icon {
-            width: 30px;
-            margin: 0 18px;
-        }
+  <div id="promptbar">
+    <form id="form">
+      <span class="prompt">pisanvs@cl:<span class="path" id="path">~</span>$</span>
+      <input id="input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type 'help' or click links above" />
+      <span class="hint">↑/↓ history · tab complete</span>
+      <button id="clear-btn" type="button" data-run="clear">clr</button>
+    </form>
+  </div>
 
-        .cyan {
-            color: #18BCBC;
-            text-shadow: 10px 5px 60px rgba(255, 255, 255, 0.62);
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-        }
-
-        .content-wrapper {
-            width: 100%;
-            padding-top: 5em;
-            max-width: 68.5vw;
-            margin: 0 auto;
-            overflow: visible;
-        }
-
-        .content-links {
-            display: flex;
-            justify-content: space-around;
-            padding-top: 20vh;
-        }
-
-        .content-link {
-            flex: 0 0 15vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 1em 0;
-            min-width: 0;
-        }
-
-        .content-link a {
-            font-weight: 500;
-            font-size: 64px;
-            text-shadow: 15px -15px 60px rgba(255, 255, 255, 0.385);
-        }
-
-        @media (min-width: 940px) {
-            .content-link {
-                position: relative;
-            }
-
-            .content-link a {
-                transform: rotate(90deg);
-            }
-        }
-
-        /* Media Queries */
-        @media (max-width: 940px) {
-            .header {
-                flex-direction: column;
-            }
-
-            .content-links {
-                flex-direction: column-reverse;
-                align-items: center;
-                padding-top: 5vh;
-            }
-
-            .content-link a {
-                font-size: 40px;
-            }
-
-            .content-link {
-                flex: 1 0 0vw;
-            }
-
-            .socials {
-                margin: 2em 0;
-            }
-
-            .title {
-                margin: 0 auto;
-            }
-        }
-    </style>
+  <script src="./content.js"></script>
+  <script src="./fs.js"></script>
+  <script src="./terminal.js"></script>
 </body>
-
 </html>

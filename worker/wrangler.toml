@@ -1,0 +1,11 @@
+name = "pisanvs-live"
+main = "index.js"
+compatibility_date = "2024-09-23"
+
+# After deploying, add a custom route in the Cloudflare dashboard:
+#   live.pisanvs.cl/* → pisanvs-live
+#
+# Set secrets:
+#   npx wrangler secret put LASTFM_KEY     (free at last.fm/api)
+#   npx wrangler secret put NOTION_TOKEN   (Notion integration token)
+#   npx wrangler secret put DISCOGS_TOKEN  (discogs.com/settings/developers → personal token)

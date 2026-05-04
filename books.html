@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>books — pisanvs</title>
+  <style>
+    @font-face {
+      font-family: 'RobotoMono';
+      src: url('./assets/fonts/RobotoMono-VariableFont_wght.ttf') format('truetype-variations');
+      font-weight: 100 700;
+    }
+    :root {
+      --bg:         #0a0a0a;
+      --fg:         #d4d4d4;
+      --green:      #39ff14;
+      --green-dim:  #1a8c00;
+      --cyan:       #00e5ff;
+      --muted:      #555;
+      --yellow:     #ffd700;
+      --orange:     #ff8c00;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'RobotoMono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 48px 24px 80px;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--cyan); }
+    #header {
+      margin-bottom: 32px;
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+    #header h1 { color: var(--green); font-size: 15px; font-weight: 600; }
+    #header .back { color: var(--muted); font-size: 12px; }
+    #header .back:hover { color: var(--cyan); }
+    #stats { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+    .tree { max-width: 760px; }
+
+    .group-label {
+      margin-top: 24px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .group-label .icon { color: var(--muted); }
+    .group-label .name { font-weight: 600; }
+    .group-label .count { color: var(--muted); font-size: 11px; }
+
+    .group-done   .name { color: var(--green); }
+    .group-progress .name { color: var(--cyan); }
+    .group-wishlist .name { color: var(--yellow); }
+    .group-other   .name { color: var(--muted); }
+
+    .book-line {
+      display: flex;
+      gap: 0;
+      padding: 1px 0;
+      padding-left: 4px;
+    }
+    .tree-branch { color: var(--muted); white-space: pre; flex-shrink: 0; }
+    .book-title { color: var(--fg); }
+    .book-author { color: var(--muted); }
+    .book-rating { color: var(--yellow); margin-left: 8px; flex-shrink: 0; }
+
+    #loading { color: var(--muted); }
+
+    canvas#crt-bg {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: .25;
+    }
+    .tree { position: relative; z-index: 1; }
+    #header { position: relative; z-index: 1; }
+  </style>
+</head>
+<body>
+  <canvas id="crt-bg"></canvas>
+
+  <div id="header">
+    <h1>~/books</h1>
+    <a class="back" href="/">← back</a>
+    <span id="stats"></span>
+  </div>
+
+  <div class="tree" id="tree">
+    <div id="loading">loading…</div>
+  </div>
+
+  <script>
+  const LIVE_URL = 'https://pisanvs-live.pisanvs-group.workers.dev';
+
+  const STATUS_ORDER = ['Done', 'In progress', 'Not started', 'WISHLIST', 'Unfinished'];
+  const STATUS_META  = {
+    'Done':        { cls: 'group-done',     icon: '█', label: 'read' },
+    'In progress': { cls: 'group-progress', icon: '▒', label: 'reading' },
+    'Not started': { cls: 'group-other',    icon: '░', label: 'unread' },
+    'WISHLIST':    { cls: 'group-wishlist', icon: '◇', label: 'wishlist' },
+    'Unfinished':  { cls: 'group-other',    icon: '·', label: 'unfinished' },
+  };
+
+  function escHtml(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function ratingStars(r) {
+    if (!r) return '';
+    const n = parseInt(r, 10);
+    if (!n) return '';
+    return '★'.repeat(n) + '☆'.repeat(5 - n);
+  }
+
+  function renderTree(books) {
+    const treeEl   = document.getElementById('tree');
+    const statsEl  = document.getElementById('stats');
+
+    const done = books.filter(b => b.status === 'Done').length;
+    statsEl.textContent = `${done} read · ${books.length} total`;
+
+    const groups = {};
+    for (const b of books) {
+      const s = b.status || 'Not started';
+      (groups[s] = groups[s] || []).push(b);
+    }
+
+    const html = [];
+    const order = [...STATUS_ORDER, ...Object.keys(groups).filter(k => !STATUS_ORDER.includes(k))];
+
+    for (const status of order) {
+      const list = groups[status];
+      if (!list?.length) continue;
+      const meta = STATUS_META[status] || { cls: 'group-other', icon: '·', label: status.toLowerCase() };
+
+      html.push(`<div class="group-label ${escHtml(meta.cls)}">
+        <span class="icon">${escHtml(meta.icon)}</span>
+        <span class="name">${escHtml(meta.label)}</span>
+        <span class="count">(${list.length})</span>
+      </div>`);
+
+      list.forEach((b, i) => {
+        const last   = i === list.length - 1;
+        const branch = last ? '└── ' : '├── ';
+        const stars  = ratingStars(b.rating);
+        html.push(`<div class="book-line">
+          <span class="tree-branch">${escHtml(branch)}</span>
+          <span class="book-title">${escHtml(b.title)}</span>
+          <span class="book-author">&nbsp;—&nbsp;${escHtml(b.author)}</span>
+          ${stars ? `<span class="book-rating">${escHtml(stars)}</span>` : ''}
+        </div>`);
+      });
+    }
+
+    treeEl.innerHTML = html.join('');
+  }
+
+  async function load() {
+    const res  = await fetch(LIVE_URL);
+    const data = await res.json();
+    if (data.books?.length) renderTree(data.books);
+    else document.getElementById('loading').textContent = 'no books found.';
+  }
+
+  load().catch(e => {
+    document.getElementById('loading').textContent = 'failed to load: ' + e.message;
+  });
+
+  // CRT
+  (function() {
+    const c = document.getElementById('crt-bg');
+    const ctx = c.getContext('2d');
+    function resize() { c.width = innerWidth; c.height = innerHeight; }
+    resize(); addEventListener('resize', resize);
+    let t = 0;
+    (function tick() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.strokeStyle = 'rgba(0,255,0,.15)';
+      ctx.lineWidth = 1;
+      const step = 36, off = (t * 0.4) % step;
+      for (let y = -step + off; y < c.height; y += step) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(c.width, y); ctx.stroke();
+      }
+      for (let x = 0; x < c.width; x += step) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, c.height); ctx.stroke();
+      }
+      t++; requestAnimationFrame(tick);
+    })();
+  })();
+  </script>
+</body>
+</html>
