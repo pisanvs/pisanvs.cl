@@ -429,6 +429,9 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
             <button class="chip" data-run="cat /home/pisanvs/projects/iypt/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/iypt/run">./run ↗</button>
           </li>
+          <li><span style="color:var(--green)">la clase 2.0</span> — one week, successful founders teaching the next generation. originally a real university class.
+            <button class="chip cyan" data-run="/home/pisanvs/projects/la-clase/run">./run ↗</button>
+          </li>
           <li><span style="color:var(--green)">blog</span> — long-form thinking, on substack.
             <button class="chip cyan" data-run="/home/pisanvs/projects/blog/latest">./latest ↗</button>
           </li>

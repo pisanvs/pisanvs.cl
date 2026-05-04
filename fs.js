@@ -51,7 +51,7 @@ const FS = {
   // ── projects ─────────────────────────────────────────────────────────
   '/home/pisanvs/projects': {
     type: 'dir',
-    children: ['stick', 'numotics', 'tedx', 'iypt', 'blog', 'misc'],
+    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'blog', 'misc'],
   },
 
   '/home/pisanvs/projects/stick': {
@@ -108,6 +108,20 @@ const FS = {
     type: 'exec',
     describe: 'open iypt.pisanvs.cl',
     run: (term) => { term.openPane('https://iypt.pisanvs.cl', 'IYPT Chile'); },
+  },
+
+  '/home/pisanvs/projects/la-clase': {
+    type: 'dir',
+    children: ['README.md', 'run'],
+  },
+  '/home/pisanvs/projects/la-clase/README.md': {
+    type: 'file',
+    content: CONTENT.projects.laClase,
+  },
+  '/home/pisanvs/projects/la-clase/run': {
+    type: 'exec',
+    describe: 'open laclase.indies.la',
+    run: (term) => { window.open('https://laclase.indies.la', '_blank', 'noopener'); term.print('opening laclase.indies.la…', 'faint'); },
   },
 
   '/home/pisanvs/projects/blog': {
