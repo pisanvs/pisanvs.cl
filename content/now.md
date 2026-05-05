@@ -1,1 +1,1 @@
-building things.
+probably taking an IB exam or studying for the SAT

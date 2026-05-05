@@ -1,5 +1,5 @@
 mail:         maxmorel@pisanvs.cl
 gpg:          cat ~/me/pubkey.asc
-matrix:       @pisanvs:matrix.org
-calendar:     pisanvs.cl/meet
-afterschool:  pisanvs.cl/afterschool
+matrix:       @pisanvs:beeper.com
+misc stuff:   pisanvs.cl/meet
+after school: pisanvs.cl/afterschool
