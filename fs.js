@@ -3,7 +3,7 @@
 const FS = {
   '/home/pisanvs': {
     type: 'dir',
-    children: ['me', 'projects', 'tools', 'code', 'now', 'books'],
+    children: ['me', 'projects', 'tools', 'code', 'now', 'books', 'vinyls'],
   },
 
   // ── me ──────────────────────────────────────────────────────────────
@@ -205,9 +205,18 @@ const FS = {
 
   // ── books ─────────────────────────────────────────────────────────────
   '/home/pisanvs/books': {
-    type: 'exec',
+    type: 'dir',
+    redirect: '/books.html',
+    children: [],
     describe: 'open books page',
-    run: (term) => { term.openPane('/books.html', '~/books'); },
+  },
+
+  // ── vinyls ────────────────────────────────────────────────────────────
+  '/home/pisanvs/vinyls': {
+    type: 'dir',
+    redirect: '/vinyls.html',
+    children: [],
+    describe: 'open vinyls page',
   },
 
   // ── hidden ───────────────────────────────────────────────────────────
