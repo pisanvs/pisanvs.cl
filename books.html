@@ -19,6 +19,7 @@
       --muted:      #555;
       --yellow:     #ffd700;
       --orange:     #ff8c00;
+      --purple:     #c084fc;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
@@ -38,13 +39,19 @@
       display: flex;
       align-items: baseline;
       gap: 24px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
     }
     #header h1 { color: var(--green); font-size: 15px; font-weight: 600; }
     #header .back { color: var(--muted); font-size: 12px; }
     #header .back:hover { color: var(--cyan); }
     #stats { color: var(--muted); font-size: 12px; margin-left: auto; }
 
-    .tree { max-width: 760px; }
+    .tree {
+      max-width: 760px;
+      margin: 0 auto;
+    }
 
     .group-label {
       margin-top: 24px;
@@ -57,10 +64,11 @@
     .group-label .name { font-weight: 600; }
     .group-label .count { color: var(--muted); font-size: 11px; }
 
-    .group-done   .name { color: var(--green); }
+    .group-done     .name { color: var(--green); }
     .group-progress .name { color: var(--cyan); }
     .group-wishlist .name { color: var(--yellow); }
-    .group-other   .name { color: var(--muted); }
+    .group-reread   .name { color: var(--orange); }
+    .group-other    .name { color: var(--muted); }
 
     .book-line {
       display: flex;
@@ -69,9 +77,10 @@
       padding-left: 4px;
     }
     .tree-branch { color: var(--muted); white-space: pre; flex-shrink: 0; }
-    .book-title { color: var(--fg); }
+    .book-title  { color: var(--fg); }
     .book-author { color: var(--muted); }
     .book-rating { color: var(--yellow); margin-left: 8px; flex-shrink: 0; }
+    .book-life   { color: var(--purple); margin-left: 6px; flex-shrink: 0; font-size: 14px; }
 
     #loading { color: var(--muted); }
 
@@ -79,17 +88,53 @@
       position: fixed; inset: 0;
       pointer-events: none; z-index: 0; opacity: .25;
     }
-    .tree { position: relative; z-index: 1; }
-    #header { position: relative; z-index: 1; }
+    .tree    { position: relative; z-index: 1; }
+    #header  { position: relative; z-index: 1; }
+    #nav     { position: relative; z-index: 1; }
+
+    #nav {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      display: flex;
+      gap: 8px;
+    }
+    .nav-chip {
+      display: inline-block;
+      background: transparent;
+      border: 1px solid;
+      font-family: 'RobotoMono', monospace;
+      font-size: 12px;
+      padding: 2px 10px;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-chip.books {
+      color: var(--green);
+      border-color: var(--green);
+      background: rgba(57,255,20,.08);
+    }
+    .nav-chip.books:hover { background: rgba(57,255,20,.16); }
+    .nav-chip.vinyls {
+      color: var(--muted);
+      border-color: var(--muted);
+    }
+    .nav-chip.vinyls:hover { color: var(--pink); border-color: var(--pink); background: rgba(244,114,182,.06); }
   </style>
 </head>
 <body>
   <canvas id="crt-bg"></canvas>
 
   <div id="header">
-    <h1>~/books</h1>
+    <h1>tree ~/books</h1>
     <a class="back" href="/">← back</a>
     <span id="stats"></span>
+  </div>
+
+  <div id="nav">
+    <a class="nav-chip books" href="/books.html">📚 my books</a>
+    <a class="nav-chip vinyls" href="/vinyls.html">🎵 my vinyls</a>
   </div>
 
   <div class="tree" id="tree">
@@ -97,15 +142,16 @@
   </div>
 
   <script>
-  const LIVE_URL = 'https://pisanvs-live.pisanvs-group.workers.dev';
+  const LIVE_URL = 'https://live.pisanvs.cl';
 
-  const STATUS_ORDER = ['Done', 'In progress', 'Not started', 'WISHLIST', 'Unfinished'];
+  const STATUS_ORDER = ['In progress', 'WISHLIST', 'Due for a reread', 'Done', 'Not started', 'Unfinished'];
   const STATUS_META  = {
-    'Done':        { cls: 'group-done',     icon: '█', label: 'read' },
-    'In progress': { cls: 'group-progress', icon: '▒', label: 'reading' },
-    'Not started': { cls: 'group-other',    icon: '░', label: 'unread' },
-    'WISHLIST':    { cls: 'group-wishlist', icon: '◇', label: 'wishlist' },
-    'Unfinished':  { cls: 'group-other',    icon: '·', label: 'unfinished' },
+    'In progress':     { cls: 'group-progress', icon: '▒', label: 'reading' },
+    'WISHLIST':        { cls: 'group-wishlist', icon: '◇', label: 'wishlist' },
+    'Due for a reread':{ cls: 'group-reread',   icon: '↺', label: 'due for a reread' },
+    'Done':            { cls: 'group-done',     icon: '█', label: 'read' },
+    'Not started':     { cls: 'group-other',    icon: '░', label: 'unread' },
+    'Unfinished':      { cls: 'group-other',    icon: '·', label: 'unfinished' },
   };
 
   function escHtml(s) {
@@ -120,9 +166,15 @@
     return '★'.repeat(n) + '☆'.repeat(5 - n);
   }
 
+  function isLifeChanging(rating) {
+    if (!rating) return false;
+    const r = String(rating).toLowerCase();
+    return r.includes('life') || r.includes('changing') || r === '5';
+  }
+
   function renderTree(books) {
-    const treeEl   = document.getElementById('tree');
-    const statsEl  = document.getElementById('stats');
+    const treeEl  = document.getElementById('tree');
+    const statsEl = document.getElementById('stats');
 
     const done = books.filter(b => b.status === 'Done').length;
     statsEl.textContent = `${done} read · ${books.length} total`;
@@ -151,11 +203,13 @@
         const last   = i === list.length - 1;
         const branch = last ? '└── ' : '├── ';
         const stars  = ratingStars(b.rating);
+        const life   = isLifeChanging(b.rating);
         html.push(`<div class="book-line">
           <span class="tree-branch">${escHtml(branch)}</span>
           <span class="book-title">${escHtml(b.title)}</span>
           <span class="book-author">&nbsp;—&nbsp;${escHtml(b.author)}</span>
           ${stars ? `<span class="book-rating">${escHtml(stars)}</span>` : ''}
+          ${life  ? `<span class="book-life" title="life changing">✦</span>` : ''}
         </div>`);
       });
     }
