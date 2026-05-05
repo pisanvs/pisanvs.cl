@@ -14,7 +14,7 @@
  */
 
 const CACHE_TTL   = 300; // seconds
-const CACHE_KEY   = 'https://pisanvs-live/v4';
+const CACHE_KEY   = 'https://pisanvs-live/v6';
 const LASTFM_USER = 'maxmorelpisano';
 const DISCOGS_USER = 'pisanvs';
 const NOTION_DB   = '9a9a392ec4be4a47bbc2de013f744d36';
@@ -72,20 +72,43 @@ async function fetchDiscogsWantlist(token) {
   }));
 }
 
+async function fetchDiscogsCollection(token) {
+  const url = `https://api.discogs.com/users/${DISCOGS_USER}/collection/folders/0/releases?per_page=100&sort=added&sort_order=desc`;
+  const headers = { 'User-Agent': 'pisanvs.cl/1.0' };
+  if (token) headers['Authorization'] = `Discogs token=${token}`;
+  const r = await fetch(url, { headers });
+  const d = await r.json();
+  return (d.releases || []).map(r => ({
+    title:  r.basic_information.title,
+    artist: r.basic_information.artists?.[0]?.name || '',
+    year:   r.basic_information.year || null,
+    genres: r.basic_information.genres || [],
+    thumb:  r.basic_information.thumb || '',
+  }));
+}
+
 async function fetchNotion(token) {
   if (!token) return null;
-  const r = await fetch(`https://api.notion.com/v1/databases/${NOTION_DB}/query`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ page_size: 100 }),
-  });
-  const d = await r.json();
-  if (!d.results) return null;
-  return d.results.map(p => {
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Notion-Version': '2022-06-28',
+    'Content-Type': 'application/json',
+  };
+  const results = [];
+  let cursor = undefined;
+  do {
+    const body = { page_size: 100 };
+    if (cursor) body.start_cursor = cursor;
+    const r = await fetch(`https://api.notion.com/v1/databases/${NOTION_DB}/query`, {
+      method: 'POST', headers, body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (!d.results) break;
+    results.push(...d.results);
+    cursor = d.has_more ? d.next_cursor : undefined;
+  } while (cursor);
+
+  return results.map(p => {
     const props = p.properties;
     const title  = props.Name?.title?.[0]?.plain_text || '';
     const author = props.Author?.rich_text?.[0]?.plain_text || '';
@@ -114,18 +137,20 @@ export default {
       return res;
     }
 
-    const [track, post, wantlist, books] = await Promise.allSettled([
+    const [track, post, wantlist, notion, collection] = await Promise.allSettled([
       fetchLastFm(env.LASTFM_KEY),
       fetchSubstack(),
       fetchDiscogsWantlist(env.DISCOGS_TOKEN),
       fetchNotion(env.NOTION_TOKEN),
+      fetchDiscogsCollection(env.DISCOGS_TOKEN),
     ]);
 
     const data = {
-      track:    track.status    === 'fulfilled' ? track.value    : null,
-      post:     post.status     === 'fulfilled' ? post.value     : null,
-      wantlist: wantlist.status === 'fulfilled' ? wantlist.value : [],
-      books:    books.status    === 'fulfilled' ? books.value    : null,
+      track:      track.status      === 'fulfilled' ? track.value      : null,
+      post:       post.status       === 'fulfilled' ? post.value       : null,
+      wantlist:   wantlist.status   === 'fulfilled' ? wantlist.value   : [],
+      books:      notion.status     === 'fulfilled' ? notion.value     : null,
+      vinyls:     collection.status === 'fulfilled' ? collection.value : [],
     };
 
     const res = new Response(JSON.stringify(data), {
