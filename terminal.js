@@ -153,6 +153,7 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
       const n = node(target);
       if (!n)               return out(`cd: ${arg}: no such file or directory`, 'err');
       if (n.type !== 'dir') return out(`cd: ${arg}: not a directory`, 'err');
+      if (n.redirect)       { window.location.href = n.redirect; return; }
       prevCwd = cwd;
       cwd = target;
       if (pathEl) pathEl.textContent = displayPath(cwd);
@@ -288,9 +289,9 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
   }
 
   // ── worker: centralised live data ────────────────────────────────────
-  // Deployed at pisanvs-live.pisanvs-group.workers.dev
+  // Deployed at live.pisanvs.cl
   // Set custom domain live.pisanvs.cl in Cloudflare dashboard when ready
-  const LIVE_URL = 'https://pisanvs-live.pisanvs-group.workers.dev';
+  const LIVE_URL = 'https://live.pisanvs.cl';
   async function fetchLive() {
     const res = await fetch(LIVE_URL);
     if (!res.ok) return;
@@ -379,23 +380,38 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
   }
 
   // ── ASCII portrait ───────────────────────────────────────────────────
-  const PORTRAIT = String.raw`        ......
-     ..::--==-::..
-   .:-=+**####**+=-:.
-  .-+*##%%%%%%%%##*+-.
- :=*#%%%@@@@@@@%%%#*=:
-.=*#%%@@@@@@@@@@@%%#*=.
-=*#%%@@@@@@@@@@@@@%%#*=
-+*#%@@@@@@@@@@@@@@@%#*+
-+*#%@@@@@@##@@@@@@@%#*+
-+*#%@@@@@%::%@@@@@@%#*+
-=*#%@@@@@@##@@@@@@@%#*=
-.=*#%@@@@@@@@@@@@@%#*=.
- :=*#%@@@@@@@@@@@%#*=:
-  .-+*#%%@@@@@%%#*+-.
-   .:-=+*######*+=-:.
-     ..::--==-::..
-        ......`;
+  const PORTRAIT = `               .,'^"',,^',.
+             ':--~;~=+-+%-"^',
+           ,;==~:^..'+@@*;~;~-~;,
+         ,:+*+-;"'.,:=;;--~~---++^.
+       ,:++=++-;:, '~:""=*=~~-==*#~.
+      "-=+=#*=+"  ,;==+-~;"^^~###*%~.,
+     :*=++#*+#;^~+%@@@@@%#+-"^+@%##%;..
+    "%+++*#**=~%@@@%%%%%@@@@%~~%%%%%@-,
+   .+#+=+**++-%@%%%@@@@@@%%%%+=%@%%%%@=
+   ~%*++=*=*=+@%@@@@@@@%%%%%%+=*%##@%%@^
+  ^#*=**-+=*=%@@@@@@@%@@@@@@%**-#*+@%%%=
+ .;~~**-=**-:+*#%@@@@@%#++++#%%+%++%@%%+.
+ ^^,=%=~*++;=++*%@%@@#=--=+-+#%%%++#%%%#^
+.,.:++-+#*~"=~~%@%@@**%%*~-+*#%%%=+#%@%%:
+. .:;-=%*+-#@@@@%@@@#%%%%*#+#@%%@*-*%@@@%"
+. ,':~*#~+*@%@%@@@%%%*@@@@@@@%%@#%-:;=+#%#~'
+...,'^-:~#@%@%@%%@@@%*+%%%%%%%+#%#%=":~--+-'
+    .'^~+#%%%%@%%%#;";-%%%@%@%:,~=*%%##%+".
+    .";:=#%%%@@@@@#+*#%@@%@%#+,  ,^-#%@%*,
+   ,:~^,^%%%%**%%@@@##+-#%@#+;  .  '-+=**"
+   '',,. ~@%@%%%%%%%##*#%@%=~^    ,.^+:,',
+      .'  =%%@@@@@%%%*+%@#=~:'    ...',
+       ,  "@%@@@@@@@%*#%#+=;',  ,:"::
+       '^ "@%@@@@@%%@@@%@#~"-^ .:@#@~
+      .,''^@%%%%%@@@%#@%-";#@; ,,~=*'
+        . '%@%%#=;"^.'",,~%@%;   .;:
+           #@%@@@#=;^'';#@@%@"  ,::.
+           *@%@%@@@@@%%@@%%%#.^::"""'.
+          ,#%%@@@%%%%@@%%@%%- ":"'  .',',,
+          -@%@@@@@@@@%%%%%@@; '"^.     .,'^^'.
+          #%%@@@@@@@@@@@@@#;.   ,         .,''''',.
+         ,%@%@@@@@@@@@%%=".                   .,''^',. `;
 
   // ── index page ───────────────────────────────────────────────────────
   function buildIndex() {
@@ -411,6 +427,11 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
           </div>
           <pre class="ascii-portrait" aria-hidden="true">${PORTRAIT}</pre>
         </div>
+      </div>
+
+      <div class="block reveal" style="animation-delay:.08s">
+        <button class="chip" data-run="cd ~/books">📚 my books</button>
+        <button class="chip cyan" data-run="cd ~/vinyls">🎵 my vinyls</button>
       </div>
 
       <div class="block reveal" style="animation-delay:.15s">
