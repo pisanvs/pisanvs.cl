@@ -133,6 +133,60 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
         return;
       }
 
+      // preview for redirect dirs with no real children
+      if (n.redirect && (!n.children || n.children.length === 0)) {
+        if (target.endsWith('/books')) {
+          const books = window._BOOKS;
+          if (!books || !books.length) {
+            outHTML(`<span style="color:var(--muted)">loading… try again in a moment or <a href="/books.html" style="color:var(--cyan)">open books page</a></span>`);
+          } else {
+            const preview = books.slice(0, 8).map(b => {
+              const title = escHtml(b.title || b.name || 'untitled');
+              const author = b.author ? `<span style="color:var(--muted)"> — ${escHtml(b.author)}</span>` : '';
+              const status = b.status === 'reading' ? `<span style="color:var(--green)"> ▶</span>` : '';
+              return `<span style="color:var(--fg)">${title}</span>${author}${status}`;
+            }).join('\n');
+            const more = books.length > 8 ? `\n<a href="/books.html" style="color:var(--cyan)">+ ${books.length - 8} more →</a>` : `\n<a href="/books.html" style="color:var(--cyan)">open full list →</a>`;
+            outHTML(preview + more);
+          }
+          return;
+        }
+        if (target.endsWith('/vinyls/collection')) {
+          const vinyls = window._VINYLS;
+          if (!vinyls || !vinyls.length) {
+            outHTML(`<span style="color:var(--muted)">loading… or <a href="/vinyls.html" style="color:var(--cyan)">open vinyls page</a></span>`);
+          } else {
+            const preview = vinyls.slice(0, 8).map(v => {
+              const title = escHtml(v.title || 'untitled');
+              const artistStr = v.artist ? `<span style="color:var(--muted)"> — ${escHtml(v.artist)}</span>` : '';
+              const year = v.year ? `<span style="color:var(--muted)"> (${v.year})</span>` : '';
+              return `<span style="color:var(--cyan)">♪</span> <span style="color:var(--fg)">${title}</span>${artistStr}${year}`;
+            }).join('\n');
+            const more = vinyls.length > 8 ? `\n<a href="/vinyls.html" style="color:var(--cyan)">+ ${vinyls.length - 8} more →</a>` : `\n<a href="/vinyls.html" style="color:var(--cyan)">open full list →</a>`;
+            outHTML(preview + more);
+          }
+          return;
+        }
+        if (target.endsWith('/vinyls/wantlist')) {
+          const wantlist = window._WANTLIST;
+          if (!wantlist || !wantlist.length) {
+            outHTML(`<span style="color:var(--muted)">loading… or <a href="/vinyls.html" style="color:var(--cyan)">open vinyls page</a></span>`);
+          } else {
+            const preview = wantlist.slice(0, 8).map(v => {
+              const title = escHtml(v.title || 'untitled');
+              const artistStr = v.artist ? `<span style="color:var(--muted)"> — ${escHtml(v.artist)}</span>` : '';
+              const year = v.year ? `<span style="color:var(--muted)"> (${v.year})</span>` : '';
+              return `<span style="color:var(--green)">+</span> <span style="color:var(--fg)">${title}</span>${artistStr}${year}`;
+            }).join('\n');
+            const more = wantlist.length > 8 ? `\n<a href="/vinyls.html" style="color:var(--cyan)">+ ${wantlist.length - 8} more →</a>` : `\n<a href="/vinyls.html" style="color:var(--cyan)">open full list →</a>`;
+            outHTML(preview + more);
+          }
+          return;
+        }
+        outHTML(`<a href="${escHtml(n.redirect)}" style="color:var(--cyan)">${escHtml(n.redirect)}</a>`);
+        return;
+      }
+
       const items = (n.children || []).filter(name => !node(target + '/' + name)?.hidden);
       if (items.length === 0) { out('(empty)'); return; }
       const html = items.map(name => {
@@ -316,6 +370,10 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
 
     if (Array.isArray(data.wantlist) && data.wantlist.length) {
       window._WANTLIST = data.wantlist;
+    }
+
+    if (Array.isArray(data.vinyls) && data.vinyls.length) {
+      window._VINYLS = data.vinyls;
     }
 
     if (data.books) {

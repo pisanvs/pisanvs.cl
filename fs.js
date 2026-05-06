@@ -215,8 +215,22 @@ const FS = {
   '/home/pisanvs/vinyls': {
     type: 'dir',
     redirect: '/vinyls.html',
-    children: [],
+    children: ['collection', 'wantlist'],
     describe: 'open vinyls page',
+  },
+
+  '/home/pisanvs/vinyls/collection': {
+    type: 'dir',
+    redirect: '/vinyls.html',
+    children: [],
+    describe: 'my record collection',
+  },
+
+  '/home/pisanvs/vinyls/wantlist': {
+    type: 'dir',
+    redirect: '/vinyls.html#wantlist',
+    children: [],
+    describe: 'records i want to buy',
   },
 
   // ── hidden ───────────────────────────────────────────────────────────
