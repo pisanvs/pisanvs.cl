@@ -9,7 +9,7 @@ const FS = {
   // ── me ──────────────────────────────────────────────────────────────
   '/home/pisanvs/me': {
     type: 'dir',
-    children: ['bio.md', 'contact.txt', 'socials', 'pubkey.asc', 'wantlist'],
+    children: ['bio.md', 'contact.txt', 'socials', 'pubkey.asc'],
   },
   '/home/pisanvs/me/bio.md': {
     type: 'file',
@@ -23,20 +23,6 @@ const FS = {
     type: 'file',
     content: CONTENT.pubkey,
   },
-  '/home/pisanvs/me/wantlist': {
-    type: 'exec',
-    describe: 'print discogs wantlist',
-    run: (term) => {
-      const list = window._WANTLIST;
-      if (!list) { term.print('wantlist loading — try again in a moment', 'faint'); return; }
-      term.print(`discogs wantlist (${list.length})`, 'muted');
-      list.forEach(r => {
-        const year = r.year ? ` (${r.year})` : '';
-        term.print(`  ${r.artist} — ${r.title}${year}`, 'cyan');
-      });
-    },
-  },
-
   '/home/pisanvs/me/socials': {
     type: 'exec',
     describe: 'print social links',
