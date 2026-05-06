@@ -109,6 +109,14 @@
     .vinyl-year   { color: var(--muted); font-size: 11px; margin-left: 8px; flex-shrink: 0; }
     .vinyl-genre  { color: var(--purple); font-size: 11px; margin-left: 6px; flex-shrink: 0; opacity: 0.7; }
 
+    .wantlist-line { display: flex; align-items: baseline; gap: 0; padding: 1px 0; padding-left: 4px; }
+    .want-branch  { color: var(--green-dim); white-space: pre; flex-shrink: 0; }
+    .want-title   { color: var(--fg); }
+    .want-artist  { color: var(--muted); }
+    .want-year    { color: var(--muted); font-size: 11px; margin-left: 8px; flex-shrink: 0; }
+
+    .section-gap { margin-top: 36px; }
+
     #loading { color: var(--muted); }
 
     canvas#crt-bg {
@@ -145,54 +153,73 @@
       ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
-  function renderTree(vinyls) {
+  function renderTree(vinyls, wantlist) {
     const treeEl  = document.getElementById('tree');
     const statsEl = document.getElementById('stats');
 
-    statsEl.textContent = `${vinyls.length} records`;
-
-    // Group by decade
-    const groups = {};
-    for (const v of vinyls) {
-      const decade = v.year ? `${Math.floor(v.year / 10) * 10}s` : 'unknown';
-      (groups[decade] = groups[decade] || []).push(v);
-    }
-
-    // Sort decades descending, unknown last
-    const order = Object.keys(groups)
-      .filter(k => k !== 'unknown')
-      .sort((a, b) => parseInt(b) - parseInt(a));
-    if (groups['unknown']) order.push('unknown');
+    const totalRecords = (vinyls?.length || 0) + (wantlist?.length || 0);
+    statsEl.textContent = `${vinyls?.length || 0} owned · ${wantlist?.length || 0} wanted`;
 
     const html = [];
 
-    html.push(`<div class="group-label">
-      <span class="icon">◉</span>
-      <span class="name">collection</span>
-      <span class="count">(${vinyls.length})</span>
-    </div>`);
-
-    vinyls.forEach((v, i) => {
-      const last   = i === vinyls.length - 1;
-      const branch = last ? '└── ' : '├── ';
-      const genre  = v.genres?.[0] || '';
-      html.push(`<div class="vinyl-line">
-        <span class="tree-branch">${escHtml(branch)}</span>
-        <span class="vinyl-title">${escHtml(v.title)}</span>
-        <span class="vinyl-artist">&nbsp;—&nbsp;${escHtml(v.artist)}</span>
-        ${v.year ? `<span class="vinyl-year">${escHtml(String(v.year))}</span>` : ''}
-        ${genre   ? `<span class="vinyl-genre">[${escHtml(genre)}]</span>` : ''}
+    // ── collection ──────────────────────────────────────────────────────
+    if (vinyls?.length) {
+      html.push(`<div class="group-label">
+        <span class="icon">◉</span>
+        <span class="name">collection</span>
+        <span class="count">(${vinyls.length})</span>
       </div>`);
-    });
+
+      vinyls.forEach((v, i) => {
+        const last   = i === vinyls.length - 1;
+        const branch = last ? '└── ' : '├── ';
+        const genre  = v.genres?.[0] || '';
+        html.push(`<div class="vinyl-line">
+          <span class="tree-branch">${escHtml(branch)}</span>
+          <span class="vinyl-title">${escHtml(v.title)}</span>
+          <span class="vinyl-artist">&nbsp;—&nbsp;${escHtml(v.artist)}</span>
+          ${v.year ? `<span class="vinyl-year">${escHtml(String(v.year))}</span>` : ''}
+          ${genre   ? `<span class="vinyl-genre">[${escHtml(genre)}]</span>` : ''}
+        </div>`);
+      });
+    }
+
+    // ── wantlist ────────────────────────────────────────────────────────
+    if (wantlist?.length) {
+      html.push(`<div class="group-label section-gap" id="wantlist">
+        <span class="icon" style="color:var(--green-dim)">+</span>
+        <span class="name" style="color:var(--green)">wantlist</span>
+        <span class="count">(${wantlist.length})</span>
+      </div>`);
+
+      wantlist.forEach((v, i) => {
+        const last   = i === wantlist.length - 1;
+        const branch = last ? '└── ' : '├── ';
+        html.push(`<div class="wantlist-line">
+          <span class="want-branch">${escHtml(branch)}</span>
+          <span class="want-title">${escHtml(v.title)}</span>
+          <span class="want-artist">&nbsp;—&nbsp;${escHtml(v.artist)}</span>
+          ${v.year ? `<span class="want-year">${escHtml(String(v.year))}</span>` : ''}
+        </div>`);
+      });
+    }
 
     treeEl.innerHTML = html.join('');
+
+    // scroll to #wantlist anchor if present
+    if (location.hash === '#wantlist') {
+      document.getElementById('wantlist')?.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   async function load() {
     const res  = await fetch(LIVE_URL);
     const data = await res.json();
-    if (data.vinyls?.length) renderTree(data.vinyls);
-    else document.getElementById('loading').textContent = 'no vinyls found.';
+    if (data.vinyls?.length || data.wantlist?.length) {
+      renderTree(data.vinyls, data.wantlist);
+    } else {
+      document.getElementById('loading').textContent = 'no vinyls found.';
+    }
   }
 
   load().catch(e => {
