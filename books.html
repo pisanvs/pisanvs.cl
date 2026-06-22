@@ -122,6 +122,30 @@
     }
     .nav-chip.vinyls:hover { color: var(--pink); border-color: var(--pink); background: rgba(244,114,182,.06); }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://pisanvs.cl/books.html#webpage",
+        "url": "https://pisanvs.cl/books.html",
+        "isPartOf": { "@id": "https://pisanvs.cl/#website" },
+        "name": "books — pisanvs",
+        "description": "Books Max Morel (pisanvs) has read or is reading.",
+        "inLanguage": "en",
+        "about": { "@id": "https://pisanvs.cl/#person" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pisanvs.cl/" },
+            { "@type": "ListItem", "position": 2, "name": "Books", "item": "https://pisanvs.cl/books.html" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <canvas id="crt-bg"></canvas>

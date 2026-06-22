@@ -153,16 +153,18 @@ export default {
       vinyls:     collection.status === 'fulfilled' ? collection.value : [],
     };
 
+    const shouldCache = data.vinyls.length > 0 && data.wantlist.length > 0;
+
     const res = new Response(JSON.stringify(data), {
       headers: {
         ...CORS,
         'Content-Type': 'application/json',
-        'Cache-Control': `public, max-age=${CACHE_TTL}`,
+        'Cache-Control': shouldCache ? `public, max-age=${CACHE_TTL}` : 'no-store',
         'X-Cache': 'MISS',
       },
     });
 
-    await cache.put(cacheKey, res.clone());
+    if (shouldCache) await cache.put(cacheKey, res.clone());
     return res;
   },
 };

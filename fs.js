@@ -51,7 +51,7 @@ const FS = {
   // ── projects ─────────────────────────────────────────────────────────
   '/home/pisanvs/projects': {
     type: 'dir',
-    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'blog', 'misc'],
+    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'ley-chile', 'blog', 'misc'],
   },
 
   '/home/pisanvs/projects/stick': {
@@ -122,6 +122,20 @@ const FS = {
     type: 'exec',
     describe: 'open laclase.indies.la',
     run: (term) => { window.open('https://laclase.indies.la', '_blank', 'noopener'); term.print('opening laclase.indies.la…', 'faint'); },
+  },
+
+  '/home/pisanvs/projects/ley-chile': {
+    type: 'dir',
+    children: ['README.md', 'run'],
+  },
+  '/home/pisanvs/projects/ley-chile/README.md': {
+    type: 'file',
+    content: CONTENT.projects.leyChile,
+  },
+  '/home/pisanvs/projects/ley-chile/run': {
+    type: 'exec',
+    describe: 'open ley-chile',
+    run: (term) => { window.open('https://pisanvs.github.io/ley-chile', '_blank', 'noopener'); term.print('opening pisanvs.github.io/ley-chile…', 'faint'); },
   },
 
   '/home/pisanvs/projects/blog': {

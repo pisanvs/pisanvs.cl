@@ -126,6 +126,30 @@
     #header { position: relative; z-index: 1; }
     #nav    { position: relative; z-index: 1; }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://pisanvs.cl/vinyls.html#webpage",
+        "url": "https://pisanvs.cl/vinyls.html",
+        "isPartOf": { "@id": "https://pisanvs.cl/#website" },
+        "name": "vinyls — pisanvs",
+        "description": "Vinyl records in Max Morel's (pisanvs) collection.",
+        "inLanguage": "en",
+        "about": { "@id": "https://pisanvs.cl/#person" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pisanvs.cl/" },
+            { "@type": "ListItem", "position": 2, "name": "Vinyls", "item": "https://pisanvs.cl/vinyls.html" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <canvas id="crt-bg"></canvas>

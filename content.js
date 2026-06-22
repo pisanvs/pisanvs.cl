@@ -7,6 +7,7 @@ const CONTENT = {
     "blog": "# blog\n\nLong-form thinking, on substack. ./latest opens the blog.",
     "iypt": "# IYPT Chile\n\nInternational Young Physicists' Tournament — Chilean chapter.\nCo-organizer. Physics problems, teams, and a lot of debate.\n\nrun ./run to open it.\n",
     "laClase": "# la clase 2.0\n\nA one week long event where the latest generation of successful founders teach the next generation. Originally an actual university class led by Pedro Pineda.\n\nrun ./run to open it.\n",
+    "leyChile": "# ley-chile\n\nLive corpus of Chilean legislation. Every law, decree, and regulation — indexed, searchable, and always up to date.\n\nrun ./run to open it.\n",
     "numotics": "# numotics\n\nFounded and built a home automation startup. Worked on a lot of fun things — custom hardware, firmware, cloud infra, and agents. Eventually stepped back from the smart home space to focus on things that scale further.\n\nrun ./run to open the site.\n",
     "schoolViolence": "# school-violence\n\nData visualization of school violence statistics in Chile. An independent project — impactful numbers, rendered.\n\nrun ./run to open it.",
     "stick": "# Stick Learning\n\nEdtech. Making learning more frictionless.\ni'm basically building the product from the ground up.\n\nrun ./run to open it.\n",
