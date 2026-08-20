@@ -517,6 +517,10 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
             <button class="chip" data-run="cat /home/pisanvs/projects/ley-chile/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/ley-chile/run">./run ↗</button>
           </li>
+          <li><span style="color:var(--green)">pfp.cards</span> — your profile picture, dithered into a qr code that still scans.
+            <button class="chip" data-run="cat /home/pisanvs/projects/pfp-cards/README.md">cat README</button>
+            <button class="chip cyan" data-run="/home/pisanvs/projects/pfp-cards/run">./run ↗</button>
+          </li>
           <li><span style="color:var(--green)">blog</span> — long-form thinking, on substack.
             <button class="chip cyan" data-run="/home/pisanvs/projects/blog/latest">./latest ↗</button>
           </li>

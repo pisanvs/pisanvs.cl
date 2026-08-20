@@ -37,7 +37,7 @@ const FS = {
   // ── projects ─────────────────────────────────────────────────────────
   '/home/pisanvs/projects': {
     type: 'dir',
-    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'ley-chile', 'blog', 'misc'],
+    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'ley-chile', 'pfp-cards', 'blog', 'misc'],
   },
 
   '/home/pisanvs/projects/stick': {
@@ -122,6 +122,20 @@ const FS = {
     type: 'exec',
     describe: 'open ley-chile',
     run: (term) => { window.open('https://pisanvs.github.io/ley-chile', '_blank', 'noopener'); term.print('opening pisanvs.github.io/ley-chile…', 'faint'); },
+  },
+
+  '/home/pisanvs/projects/pfp-cards': {
+    type: 'dir',
+    children: ['README.md', 'run'],
+  },
+  '/home/pisanvs/projects/pfp-cards/README.md': {
+    type: 'file',
+    content: CONTENT.projects.pfpCards,
+  },
+  '/home/pisanvs/projects/pfp-cards/run': {
+    type: 'exec',
+    describe: 'open pfp.cards',
+    run: (term) => { window.open('https://pfp.cards/', '_blank', 'noopener'); term.print('opening pfp.cards…', 'faint'); },
   },
 
   '/home/pisanvs/projects/blog': {
