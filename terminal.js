@@ -479,7 +479,7 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
           <div>
             <h1># pisanvs</h1>
             <p>i'm <span style="color:var(--cyan)">max morel</span> (maximiliano morel pisano), a kid in chile building things that make me passionate.
-            currently doing systems @ <span style="color:var(--green)">recall.ai</span>. before that i founded numotics and was cto at stick.
+            currently doing systems @ <a href="https://www.recall.ai" target="_blank" style="color:var(--green)">recall.ai</a>. before that i founded numotics and was cto at stick.
             i write code, play music sometimes, and keep myself busy doing math and training various forms of AI. this site is a terminal — <button class="inline" data-run="help">read the manual</button>
             or just click around.</p>
           </div>
