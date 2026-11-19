@@ -497,6 +497,8 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
         <ul>
           <li><a href="https://hackernoon.com/git-will-stop-working-in-2100" target="_blank">git will stop working in 2100</a> <span style="color:var(--muted)">hackernoon</span></li>
           <li><a href="https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810" target="_blank">i put my country's entire legal code in git: 300,000+ documents since 1810</a> <span style="color:var(--muted)">hackernoon</span></li>
+          <li><a href="https://pisanvs.substack.com/p/ill-laugh-at-work-life-balance" target="_blank">i'll laugh at "work-life balance"</a> <span style="color:var(--muted)">substack</span></li>
+          <li><a href="https://pisanvs.substack.com/p/what-about-us-a-teenagers-perspective" target="_blank">what about us? a teenager's perspective on AI and the future</a> <span style="color:var(--muted)">substack</span></li>
         </ul>
       </div>
 
@@ -507,7 +509,7 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
             <button class="chip" data-run="cat /home/pisanvs/projects/numotics/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/numotics/run">./run ↗</button>
           </li>
-          <li><span style="color:var(--green)">stick</span> — edtech, chile/brazil pilot. <span style="color:var(--muted)">cto, 2025–2026</span>
+          <li><span style="color:var(--green)">stick</span> — edtech, chile/brazil team. <span style="color:var(--muted)">cto, 2025–2026</span>
             <button class="chip" data-run="cat /home/pisanvs/projects/stick/README.md">cat README</button>
           </li>
           <li><span style="color:var(--green)">tedxlintacyouth</span> — founded and led the event. first time organizer — 3 sponsors, highest NPS nationally, highlighted by TED. <span style="color:var(--muted)">lead organizer</span>
@@ -518,7 +520,7 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
             <button class="chip" data-run="cat /home/pisanvs/projects/iypt/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/iypt/run">./run ↗</button>
           </li>
-          <li><span style="color:var(--green)">indies.la</span> — latam indie/tech community. <span style="color:var(--muted)">co-organizer · shut down</span></li>
+          <li><span style="color:var(--green)">indies.la</span> — latam indie/tech community. <span style="color:var(--muted)">events &amp; stuff · shut down</span></li>
           <li><span style="color:var(--green)">puentes</span> — antigravity capital's SF fellowship for latam engineers. <span style="color:var(--muted)">fellow, 2026</span></li>
           <li><span style="color:var(--green)">pfp.cards</span> — your profile picture, dithered into a qr code that still scans.
             <button class="chip" data-run="cat /home/pisanvs/projects/pfp-cards/README.md">cat README</button>
