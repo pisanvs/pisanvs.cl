@@ -1,5 +1,6 @@
 # numotics
 
-Founded and built a home automation startup. Worked on a lot of fun things — custom hardware, firmware, cloud infra, and agents. Eventually stepped back from the smart home space to focus on things that scale further.
+Home automation startup, 2023–2026. Founder & CEO. Custom hardware, firmware, cloud infra, and agents.
+The work led to an invitation to address the Chilean Senate on AI legislation. Wound down to focus on things that scale further.
 
 run ./run to open the site.

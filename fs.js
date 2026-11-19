@@ -31,13 +31,14 @@ const FS = {
       term.print('instagram  https://instagram.com/pisanvs', 'cyan');
       term.print('linkedin   https://linkedin.com/in/pisanvs', 'cyan');
       term.print('substack   https://pisanvs.substack.com', 'cyan');
+      term.print('hackernoon https://hackernoon.com/u/pisanvs', 'cyan');
     },
   },
 
   // ── projects ─────────────────────────────────────────────────────────
   '/home/pisanvs/projects': {
     type: 'dir',
-    children: ['stick', 'numotics', 'tedx', 'iypt', 'la-clase', 'ley-chile', 'pfp-cards', 'blog', 'misc'],
+    children: ['stick', 'numotics', 'tedx', 'iypt', 'indies-la', 'puentes', 'pfp-cards', 'blog', 'misc'],
   },
 
   '/home/pisanvs/projects/stick': {
@@ -79,7 +80,7 @@ const FS = {
   '/home/pisanvs/projects/tedx/run': {
     type: 'exec',
     describe: 'open tedxlintacyouth',
-    run: (term) => { term.openPane('https://tedxlintacyouth.vercel.app', 'tedxlintacyouth'); },
+    run: (term) => { term.openPane('https://tedxlintacyouth.cl', 'tedxlintacyouth'); },
   },
 
   '/home/pisanvs/projects/iypt': {
@@ -96,32 +97,22 @@ const FS = {
     run: (term) => { term.openPane('https://iypt.pisanvs.cl', 'IYPT Chile'); },
   },
 
-  '/home/pisanvs/projects/la-clase': {
+  '/home/pisanvs/projects/indies-la': {
     type: 'dir',
-    children: ['README.md', 'run'],
+    children: ['README.md'],
   },
-  '/home/pisanvs/projects/la-clase/README.md': {
+  '/home/pisanvs/projects/indies-la/README.md': {
     type: 'file',
-    content: CONTENT.projects.laClase,
-  },
-  '/home/pisanvs/projects/la-clase/run': {
-    type: 'exec',
-    describe: 'open laclase.indies.la',
-    run: (term) => { window.open('https://laclase.indies.la', '_blank', 'noopener'); term.print('opening laclase.indies.la…', 'faint'); },
+    content: CONTENT.projects.indiesLa,
   },
 
-  '/home/pisanvs/projects/ley-chile': {
+  '/home/pisanvs/projects/puentes': {
     type: 'dir',
-    children: ['README.md', 'run'],
+    children: ['README.md'],
   },
-  '/home/pisanvs/projects/ley-chile/README.md': {
+  '/home/pisanvs/projects/puentes/README.md': {
     type: 'file',
-    content: CONTENT.projects.leyChile,
-  },
-  '/home/pisanvs/projects/ley-chile/run': {
-    type: 'exec',
-    describe: 'open ley-chile',
-    run: (term) => { window.open('https://pisanvs.github.io/ley-chile', '_blank', 'noopener'); term.print('opening pisanvs.github.io/ley-chile…', 'faint'); },
+    content: CONTENT.projects.puentes,
   },
 
   '/home/pisanvs/projects/pfp-cards': {
@@ -148,14 +139,28 @@ const FS = {
   },
   '/home/pisanvs/projects/blog/latest': {
     type: 'exec',
-    describe: 'open substack blog',
-    run: (term) => { window.open('https://pisanvs.substack.com', '_blank', 'noopener'); term.print('opening pisanvs.substack.com…', 'faint'); },
+    describe: 'open hackernoon profile',
+    run: (term) => { window.open('https://hackernoon.com/u/pisanvs', '_blank', 'noopener'); term.print('opening hackernoon.com/u/pisanvs…', 'faint'); },
   },
 
   '/home/pisanvs/projects/misc': {
     type: 'dir',
-    children: ['school-violence'],
+    children: ['ley-chile', 'school-violence'],
   },
+  '/home/pisanvs/projects/misc/ley-chile': {
+    type: 'dir',
+    children: ['README.md', 'run'],
+  },
+  '/home/pisanvs/projects/misc/ley-chile/README.md': {
+    type: 'file',
+    content: CONTENT.projects.leyChile,
+  },
+  '/home/pisanvs/projects/misc/ley-chile/run': {
+    type: 'exec',
+    describe: 'open ley-chile',
+    run: (term) => { window.open('https://pisanvs.github.io/ley-chile', '_blank', 'noopener'); term.print('opening pisanvs.github.io/ley-chile…', 'faint'); },
+  },
+
   '/home/pisanvs/projects/misc/school-violence': {
     type: 'dir',
     children: ['README.md', 'run'],

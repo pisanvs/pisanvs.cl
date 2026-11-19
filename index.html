@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="pisanvs — max morel. kid in chile. building hard things.">
-  <meta name="keywords" content="pisanvs, max morel, DJ, music, programming, Chile">
+  <meta name="keywords" content="pisanvs, max morel, maximiliano morel pisano, DJ, music, programming, systems, Chile">
   <meta name="author" content="pisanvs, maxmorel@pisanvs.cl">
   <meta property="og:title" content="pisanvs">
   <meta property="og:description" content="kid in chile. building hard things.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pisanvs.cl">
   <meta name="theme-color" content="#000000">
-  <title>pisanvs</title>
+  <title>Max Morel (pisanvs)</title>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,7 +32,7 @@
         "url": "https://pisanvs.cl/",
         "isPartOf": { "@id": "https://pisanvs.cl/#website" },
         "name": "pisanvs — Max Morel",
-        "description": "Personal site of Max Morel, known online as pisanvs — Chilean coder, entrepreneur, and CTO at Stick.",
+        "description": "Personal site of Max Morel, known online as pisanvs — Chilean coder and entrepreneur, doing systems at Recall.ai.",
         "inLanguage": "en",
         "mainEntity": { "@id": "https://pisanvs.cl/#person" }
       },
@@ -41,12 +41,12 @@
         "@id": "https://pisanvs.cl/#person",
         "url": "https://pisanvs.cl/",
         "name": "Max Morel",
-        "alternateName": ["Maximiliano Morel", "pisanvs"],
+        "alternateName": ["Maximiliano Morel Pisano", "Maximiliano Morel", "pisanvs"],
         "givenName": "Max",
         "familyName": "Morel",
-        "description": "Chilean coder and entrepreneur. CTO at Stick, an edtech making learning more frictionless. Started coding at 8.",
+        "description": "Chilean coder and entrepreneur. Systems engineer at Recall.ai; previously founder of numotics and CTO at Stick. Started coding at 8.",
         "disambiguatingDescription": "Chilean coder and entrepreneur, known online as pisanvs",
-        "jobTitle": "CTO",
+        "jobTitle": "Systems Engineer",
         "knowsLanguage": ["en", "es"],
         "nationality": {
           "@type": "Country",
@@ -59,28 +59,47 @@
             "addressCountry": "CL"
           }
         },
-        "affiliation": {
+        "worksFor": {
           "@type": "Organization",
-          "name": "Stick Learning",
-          "description": "Edtech platform making learning more frictionless"
+          "name": "Recall.ai",
+          "url": "https://www.recall.ai"
         },
+        "affiliation": [
+          { "@type": "Organization", "name": "Stick Learning", "description": "Edtech; CTO 2025–2026" }
+        ],
         "email": "maxmorel@pisanvs.cl",
         "sameAs": [
           "https://github.com/pisanvs",
           "https://instagram.com/pisanvs",
-          "https://linkedin.com/in/pisanvs"
+          "https://linkedin.com/in/pisanvs",
+          "https://hackernoon.com/u/pisanvs"
         ]
       },
       {
-        "@type": "SoftwareApplication",
-        "@id": "https://pisanvs.cl/#project-numotics",
+        "@type": "Organization",
+        "@id": "https://pisanvs.cl/#org-numotics",
         "url": "https://numotics.cl",
         "name": "numotics",
-        "description": "Home automation startup with custom hardware, firmware, cloud infrastructure, and AI agents.",
-        "applicationCategory": "HomeAutomationApplication",
-        "operatingSystem": "All",
-        "creator": { "@id": "https://pisanvs.cl/#person" },
-        "offers": { "@type": "Offer", "price": 0, "priceCurrency": "USD" }
+        "description": "Home automation startup (2023–2026): custom hardware, firmware, cloud infrastructure, and AI agents.",
+        "foundingDate": "2023",
+        "dissolutionDate": "2026",
+        "founder": { "@id": "https://pisanvs.cl/#person" }
+      },
+      {
+        "@type": "BlogPosting",
+        "@id": "https://pisanvs.cl/#post-git-2100",
+        "url": "https://hackernoon.com/git-will-stop-working-in-2100",
+        "headline": "Git Will Stop Working in 2100",
+        "author": { "@id": "https://pisanvs.cl/#person" },
+        "publisher": { "@type": "Organization", "name": "HackerNoon" }
+      },
+      {
+        "@type": "BlogPosting",
+        "@id": "https://pisanvs.cl/#post-ley-chile-git",
+        "url": "https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810",
+        "headline": "I Put My Country's Entire Legal Code in Git: 300,000+ Documents Since 1810",
+        "author": { "@id": "https://pisanvs.cl/#person" },
+        "publisher": { "@type": "Organization", "name": "HackerNoon" }
       },
       {
         "@type": "SoftwareApplication",
@@ -109,7 +128,7 @@
         "@id": "https://pisanvs.cl/#project-ley-chile",
         "url": "https://pisanvs.github.io/ley-chile",
         "name": "ley-chile",
-        "description": "Live corpus of Chilean legal documents and legislation — an organized, accessible digital index of Chile's legal framework.",
+        "description": "Chile's legal corpus as a git repository (300k+ documents since 1810) with a public MCP server for querying it.",
         "applicationCategory": "GovernmentApplication",
         "operatingSystem": "Web",
         "sameAs": ["https://github.com/pisanvs/ley-chile"],
@@ -306,16 +325,23 @@
 
   <noscript>
 <pre style="color:#0f0;padding:24px;font-family:monospace">
-# pisanvs — max morel
+# pisanvs — max morel (maximiliano morel pisano)
 
-kid in chile building hard things.
+kid in chile building hard things. systems @ recall.ai.
+
+## writing
+- git will stop working in 2100        https://hackernoon.com/git-will-stop-working-in-2100
+- my country's legal code in git       https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810
 
 ## projects
-- numotics        https://numotics.cl
+- numotics        https://numotics.cl          (founder, 2023–2026)
+- stick           https://sticklearning.ai     (cto, 2025–2026)
 - tedxlintacyouth https://tedxlintacyouth.cl
-- blog            https://pisanvs.substack.com
+- iypt chile      https://iypt.pisanvs.cl
+- pfp.cards       https://pfp.cards
 
-## tools
+## misc
+- ley-chile       https://pisanvs.github.io/ley-chile
 - chordid         /tools/chordid.html
 - mic-al          /tools/mic-al.html
 
@@ -323,6 +349,8 @@ kid in chile building hard things.
 - github          https://github.com/pisanvs
 - instagram       https://instagram.com/pisanvs
 - linkedin        https://linkedin.com/in/pisanvs
+- hackernoon      https://hackernoon.com/u/pisanvs
+- substack        https://pisanvs.substack.com
 
 (enable javascript for the interactive version)
 </pre>

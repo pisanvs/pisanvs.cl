@@ -105,7 +105,7 @@
 or just <em style="color:var(--cyan)">click any button</em> in the page above.`);
     },
     pwd()    { out(displayPath(cwd)); },
-    whoami() { out('pisanvs — max morel · cto @ stick · building things that scale', 'cyan'); },
+    whoami() { out('pisanvs — max morel · systems @ recall.ai · building things that scale', 'cyan'); },
     socials() {
       outHTML(`<a href="https://github.com/pisanvs" target="_blank">github</a>     https://github.com/pisanvs
 <a href="https://instagram.com/pisanvs" target="_blank">instagram</a>  https://instagram.com/pisanvs
@@ -478,8 +478,8 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
         <div class="index-head">
           <div>
             <h1># pisanvs</h1>
-            <p>i'm <span style="color:var(--cyan)">max morel</span>, a kid in chile building things that make me passionate.
-            currently cto @ <span style="color:var(--green)">stick</span>, we're making learning more frictionless.
+            <p>i'm <span style="color:var(--cyan)">max morel</span> (maximiliano morel pisano), a kid in chile building things that make me passionate.
+            currently doing systems @ <span style="color:var(--green)">recall.ai</span>. before that i founded numotics and was cto at stick.
             i write code, play music sometimes, and keep myself busy doing math and training various forms of AI. this site is a terminal — <button class="inline" data-run="help">read the manual</button>
             or just click around.</p>
           </div>
@@ -492,15 +492,23 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
         <button class="chip cyan" data-run="cd ~/vinyls">🎵 my vinyls</button>
       </div>
 
+      <div class="block reveal" style="animation-delay:.12s">
+        <h2>## writing</h2>
+        <ul>
+          <li><a href="https://hackernoon.com/git-will-stop-working-in-2100" target="_blank">git will stop working in 2100</a> <span style="color:var(--muted)">hackernoon</span></li>
+          <li><a href="https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810" target="_blank">i put my country's entire legal code in git: 300,000+ documents since 1810</a> <span style="color:var(--muted)">hackernoon</span></li>
+        </ul>
+      </div>
+
       <div class="block reveal" style="animation-delay:.15s">
         <h2>## projects</h2>
         <ul>
-          <li><span style="color:var(--green)">stick</span> — edtech. making learning more frictionless. <span style="color:var(--muted)">cto</span>
-            <span class="chip" style="color:var(--muted);border-color:var(--muted);cursor:default">stealth</span>
-          </li>
-          <li><span style="color:var(--green)">numotics</span> — home automation startup. hardware, firmware, cloud, full app. <span style="color:var(--muted)">founder</span>
+          <li><span style="color:var(--green)">numotics</span> — home automation startup. hardware, firmware, cloud, agents. led to addressing the chilean senate on AI legislation. <span style="color:var(--muted)">founder, 2023–2026</span>
             <button class="chip" data-run="cat /home/pisanvs/projects/numotics/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/numotics/run">./run ↗</button>
+          </li>
+          <li><span style="color:var(--green)">stick</span> — edtech, chile/brazil pilot. <span style="color:var(--muted)">cto, 2025–2026</span>
+            <button class="chip" data-run="cat /home/pisanvs/projects/stick/README.md">cat README</button>
           </li>
           <li><span style="color:var(--green)">tedxlintacyouth</span> — founded and led the event. first time organizer — 3 sponsors, highest NPS nationally, highlighted by TED. <span style="color:var(--muted)">lead organizer</span>
             <button class="chip" data-run="cat /home/pisanvs/projects/tedx/README.md">cat README</button>
@@ -510,19 +518,11 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
             <button class="chip" data-run="cat /home/pisanvs/projects/iypt/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/iypt/run">./run ↗</button>
           </li>
-          <li><span style="color:var(--green)">la clase 2.0</span> — one week, successful founders teaching the next generation. originally a real university class.
-            <button class="chip cyan" data-run="/home/pisanvs/projects/la-clase/run">./run ↗</button>
-          </li>
-          <li><span style="color:var(--green)">ley-chile</span> — live corpus of chilean legislation. every law, decree, and regulation — indexed and searchable.
-            <button class="chip" data-run="cat /home/pisanvs/projects/ley-chile/README.md">cat README</button>
-            <button class="chip cyan" data-run="/home/pisanvs/projects/ley-chile/run">./run ↗</button>
-          </li>
+          <li><span style="color:var(--green)">indies.la</span> — latam indie/tech community. <span style="color:var(--muted)">co-organizer · shut down</span></li>
+          <li><span style="color:var(--green)">puentes</span> — antigravity capital's SF fellowship for latam engineers. <span style="color:var(--muted)">fellow, 2026</span></li>
           <li><span style="color:var(--green)">pfp.cards</span> — your profile picture, dithered into a qr code that still scans.
             <button class="chip" data-run="cat /home/pisanvs/projects/pfp-cards/README.md">cat README</button>
             <button class="chip cyan" data-run="/home/pisanvs/projects/pfp-cards/run">./run ↗</button>
-          </li>
-          <li><span style="color:var(--green)">blog</span> — long-form thinking, on substack.
-            <button class="chip cyan" data-run="/home/pisanvs/projects/blog/latest">./latest ↗</button>
           </li>
         </ul>
       </div>
@@ -530,6 +530,10 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
       <div class="block reveal" style="animation-delay:.3s">
         <h2>## misc</h2>
         <ul>
+          <li><span style="color:var(--green)">ley-chile</span> — chile's legal corpus as a git repo (330k+ commits) with an MCP server.
+            <button class="chip" data-run="cat /home/pisanvs/projects/misc/ley-chile/README.md">cat README</button>
+            <button class="chip cyan" data-run="/home/pisanvs/projects/misc/ley-chile/run">./run ↗</button>
+          </li>
           <li><span style="color:var(--green)">chordid</span> — play a chord and have it ID'd for you.
             <button class="chip cyan" data-run="/home/pisanvs/tools/chordid/run">./run ↗</button>
           </li>
@@ -553,7 +557,8 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
         <p>find me on
           <a href="https://github.com/pisanvs" target="_blank">github</a>,
           <a href="https://instagram.com/pisanvs" target="_blank">instagram</a>,
-          <a href="https://linkedin.com/in/pisanvs" target="_blank">linkedin</a>, and
+          <a href="https://linkedin.com/in/pisanvs" target="_blank">linkedin</a>,
+          <a href="https://hackernoon.com/u/pisanvs" target="_blank">hackernoon</a>, and
           <a href="https://pisanvs.substack.com" target="_blank">substack</a>.
           mail: <a href="mailto:maxmorel@pisanvs.cl">maxmorel@pisanvs.cl</a>
           (<button class="inline" data-run="cat ~/me/pubkey.asc">gpg key</button>).</p>
