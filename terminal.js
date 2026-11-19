@@ -495,10 +495,10 @@ or just <em style="color:var(--cyan)">click any button</em> in the page above.`)
       <div class="block reveal" style="animation-delay:.12s">
         <h2>## writing</h2>
         <ul>
-          <li><a href="https://hackernoon.com/git-will-stop-working-in-2100" target="_blank">git will stop working in 2100</a> <span style="color:var(--muted)">hackernoon</span></li>
-          <li><a href="https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810" target="_blank">i put my country's entire legal code in git: 300,000+ documents since 1810</a> <span style="color:var(--muted)">hackernoon</span></li>
-          <li><a href="https://pisanvs.substack.com/p/ill-laugh-at-work-life-balance" target="_blank">i'll laugh at "work-life balance"</a> <span style="color:var(--muted)">substack</span></li>
-          <li><a href="https://pisanvs.substack.com/p/what-about-us-a-teenagers-perspective" target="_blank">what about us? a teenager's perspective on AI and the future</a> <span style="color:var(--muted)">substack</span></li>
+          <li><a href="https://hackernoon.com/i-put-my-countrys-entire-legal-code-in-git-300000-documents-since-1810" target="_blank">i put my country's entire legal code in git: 300,000+ documents since 1810</a> <span style="color:var(--muted)">hackernoon · nov 2026</span></li>
+          <li><a href="https://hackernoon.com/git-will-stop-working-in-2100" target="_blank">git will stop working in 2100</a> <span style="color:var(--muted)">hackernoon · oct 2026</span></li>
+          <li><a href="https://pisanvs.substack.com/p/ill-laugh-at-work-life-balance" target="_blank">i'll laugh at "work-life balance"</a> <span style="color:var(--muted)">substack · jul 2025</span></li>
+          <li><a href="https://pisanvs.substack.com/p/what-about-us-a-teenagers-perspective" target="_blank">what about us? a teenager's perspective on AI and the future</a> <span style="color:var(--muted)">substack · dec 2024</span></li>
         </ul>
       </div>
 
